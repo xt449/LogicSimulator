@@ -17,6 +17,7 @@ public final class Main extends GLFWManager {
 	}
 
 	int orthograhpicProgram;
+	int vbo;
 	int vao;
 
 	public void run() {
@@ -60,14 +61,12 @@ public final class Main extends GLFWManager {
 		glDeleteShader(orthograhpicFragmentShader);
 
 		// VBO
-		int vbo = glGenBuffers();
-
+		vbo = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
 		// VAO
 		vao = glGenVertexArrays();
-
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
@@ -110,28 +109,6 @@ public final class Main extends GLFWManager {
 		renderTexture(Texture.CELL, 50, 50);
 		renderTexture(Texture.INVERTER_RIGHT, 60, 60);
 		renderTexture(Texture.INVERTER_DOWN_POWERED, 70, 77);
-
-
-		/*glUseProgram(orthograhpicProgram);
-
-		Texture.INVERTER_RIGHT_POWERED.bind();
-
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(new Vector3f(0.5F, 0.5F, 0).mul(new Vector3f(windowSize.x, windowSize.y, 0)))
-						.scale(32)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), Texture.INVERTER_RIGHT_POWERED.id);
-		// TODO - glUniform3fv(glGetUniformLocation(orthograhpicProgram, "spriteColor"), new float[] { 1.0F, 1.0F, 1.0F });
-
-		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glBindVertexArray(0);*/
 	}
 
 	private void renderTexture(Texture texture, int x, int y) {

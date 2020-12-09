@@ -1,7 +1,5 @@
 package com.github.xt449.logicsimulator;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -35,73 +33,13 @@ public class Texture {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
-		//glBindTexture(GL_TEXTURE_2D, 0);
-
-		//setup();
-
-		/*glActiveTexture(GL_TEXTURE0 + id);
-		glBindTexture(GL_TEXTURE_2D, id);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		try {
-			TimeUnit.MILLISECONDS.sleep(1);
-		} catch(InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-		/*glActiveTexture(0);*/
 	}
-
-	void render(Main main) {
-		glUseProgram(main.orthograhpicProgram);
-
-		glUniformMatrix4fv(glGetUniformLocation(main.orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(new Vector3f(0.5F, (this == Texture.CELL ? -0.02F : 0) + 0.5F, 0).mul(new Vector3f(main.windowSize.x, main.windowSize.y, 0)))
-						.scale(32)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(main.orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, main.windowSize.x, main.windowSize.y, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glUniform1i(glGetUniformLocation(main.orthograhpicProgram, "image"), 0);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, id);
-
-		glBindVertexArray(main.vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindVertexArray(0);
-	}
-
-	/*private void setup() {
-		//if(glID == 0) {
-			glID = glGenTextures();
-			glBindTexture(GL_TEXTURE_2D, glID);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, byteBuffer);
-			glBindTexture(GL_TEXTURE_2D, 0);
-		//}
-	}*/
-
-	/*public int getID() {
-		return glID;
-	}*/
 
 	// Static
 
 	static void init() {
 		System.out.println("First texture ID is " + CELL.id);
-
-//		glActiveTexture(GL_TEXTURE0 + Texture.CELL.id);
-//		glBindTexture(GL_TEXTURE_2D, Texture.CELL.id);
-//
-//		glActiveTexture(GL_TEXTURE0 + Texture.INVERTER_UP.id);
-//		glBindTexture(GL_TEXTURE_2D, Texture.INVERTER_UP.id);
 	}
 
 	static final Texture CELL = new Texture("cell.png");
