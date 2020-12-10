@@ -8,88 +8,62 @@ public class GridSquare {
 	private final int x;
 	private final int y;
 
-	int component = GridComponent.NONE;
-	boolean powered = false;
+	GridComponent component = null;
 
 	public GridSquare(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public void rotateComponent() {
-		if(component < 4) {
+	public void update() {
+		if(component == null) {
 			return;
 		}
 
-		if(++component % 4 == 0) {
-			component -= 4;
-		}
-	}
-
-	public void update() {
-		if(powered) {
+		if(component.powered) {
 			// TODO
-			if(LogicSimulator.instance.getGridSquareComponent(x, y - 1) != GridComponent.NONE) {
-				final GridSquare square = LogicSimulator.instance.getGridSquare(x, y - 1);
+			if(getGridSquareComponentRelative(x, y, Direction.UP) != null) {
+				final GridSquare square = getGridSquareRelative(x, y, Direction.UP);
 				if(square != null) {
-					if(!square.powered) {
-						square.powered = true;
+					if(!square.component.powered) {
+						square.component.powered = true;
 						square.update();
 					}
 				}
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x, y + 1) != GridComponent.NONE) {
-				final GridSquare square = LogicSimulator.instance.getGridSquare(x, y + 1);
+			if(getGridSquareComponentRelative(x, y, Direction.DOWN) != null) {
+				final GridSquare square = getGridSquareRelative(x, y, Direction.DOWN);
 				if(square != null) {
-					if(!square.powered) {
-						square.powered = true;
+					if(!square.component.powered) {
+						square.component.powered = true;
 						square.update();
 					}
 				}
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x - 1, y) != GridComponent.NONE) {
-				final GridSquare square = LogicSimulator.instance.getGridSquare(x - 1, y);
+			if(getGridSquareComponentRelative(x, y, Direction.LEFT) != null) {
+				final GridSquare square = getGridSquareRelative(x, y, Direction.LEFT);
 				if(square != null) {
-					if(!square.powered) {
-						square.powered = true;
+					if(!square.component.powered) {
+						square.component.powered = true;
 						square.update();
 					}
 				}
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x + 1, y) != GridComponent.NONE) {
-				final GridSquare square = LogicSimulator.instance.getGridSquare(x + 1, y);
+			if(getGridSquareComponentRelative(x, y, Direction.RIGHT) != null) {
+				final GridSquare square = getGridSquareRelative(x, y, Direction.RIGHT);
 				if(square != null) {
-					if(!square.powered) {
-						square.powered = true;
+					if(!square.component.powered) {
+						square.component.powered = true;
 						square.update();
 					}
 				}
 			}
 		} else {
-			if(GridComponent.isInverter(component)) {
-				GridSquare forwardSquare = null;
-				switch(component) {
-					case GridComponent.INVERTER_UP: {
-						forwardSquare = LogicSimulator.instance.getGridSquare(x, y - 1);
-						break;
-					}
-					case GridComponent.INVERTER_DOWN: {
-						forwardSquare = LogicSimulator.instance.getGridSquare(x, y + 1);
-						break;
-					}
-					case GridComponent.INVERTER_LEFT: {
-						forwardSquare = LogicSimulator.instance.getGridSquare(x - 1, y);
-						break;
-					}
-					case GridComponent.INVERTER_RIGHT: {
-						forwardSquare = LogicSimulator.instance.getGridSquare(x + 1, y);
-						break;
-					}
-				}
-
+			if(component instanceof InverterComponent) {
+				final GridSquare forwardSquare = getGridSquareRelative(x, y, ((InverterComponent) component).getDirection());
 				if(forwardSquare != null) {
-					if(!forwardSquare.powered) {
-						forwardSquare.powered = true;
+					if(!forwardSquare.component.powered) {
+						forwardSquare.component.powered = true;
 						forwardSquare.update();
 					}
 				}
@@ -97,8 +71,8 @@ public class GridSquare {
 		}
 	}
 
-	public void removeComponent() {
-		component = GridComponent.NONE;
+	/*public void removeComponent() {
+		component = null;
 	}
 
 	public void setWireComponent() {
@@ -107,81 +81,178 @@ public class GridSquare {
 
 	public void setInverterComponent() {
 		component = GridComponent.INVERTER_UP;
-	}
+	}*/
 
 	public void tick() {
-         powered = false;
+         component.powered = false;
          update();
 	}
 
 	public void render() {
-		if(component == GridComponent.NONE) {
+		if(component == null) {
 			return;
 		}
 
-		if(component == GridComponent.WIRE) {
-			if(LogicSimulator.instance.getGridSquareComponent(x, y - 1) != GridComponent.NONE) {
-				LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_UP_POWERED : Texture.WIRE_UP);
+		if(component instanceof WireComponent) {
+			if(getGridSquareComponentRelative(x, y, Direction.UP) != null) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_UP_POWERED : Texture.WIRE_UP);
 				LogicSimulator.instance.drawTextureGridPosition(x, y);
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x, y + 1) != GridComponent.NONE) {
-				LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_DOWN_POWERED : Texture.WIRE_DOWN);
+			if(getGridSquareComponentRelative(x, y, Direction.DOWN) != null) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_DOWN_POWERED : Texture.WIRE_DOWN);
 				LogicSimulator.instance.drawTextureGridPosition(x, y);
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x - 1, y) != GridComponent.NONE) {
-				LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_LEFT_POWERED : Texture.WIRE_LEFT);
+			if(getGridSquareComponentRelative(x, y, Direction.LEFT) != null) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_LEFT_POWERED : Texture.WIRE_LEFT);
 				LogicSimulator.instance.drawTextureGridPosition(x, y);
 			}
-			if(LogicSimulator.instance.getGridSquareComponent(x + 1, y) != GridComponent.NONE) {
-				LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_RIGHT_POWERED : Texture.WIRE_RIGHT);
+			if(getGridSquareComponentRelative(x, y, Direction.RIGHT) != null) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_RIGHT_POWERED : Texture.WIRE_RIGHT);
 				LogicSimulator.instance.drawTextureGridPosition(x, y);
 			}
 
-			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_CENTER_POWERED : Texture.WIRE_CENTER);
+			LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_CENTER_POWERED : Texture.WIRE_CENTER);
 			LogicSimulator.instance.drawTextureGridPosition(x, y);
+
 			return;
 		}
 
-		Texture topTexture = null;
-		switch(component) {
-			case GridComponent.INVERTER_UP: {
-				topTexture = powered ? Texture.INVERTER_UP_POWERED : Texture.INVERTER_UP;
+		if(component instanceof InverterComponent) {
+			Texture topTexture = null;
+			switch(((InverterComponent) component).getDirection()) {
+				case Direction.UP: {
+					topTexture = component.powered ? Texture.INVERTER_UP_POWERED : Texture.INVERTER_UP;
+					break;
+				}
+				case Direction.DOWN: {
+					topTexture = component.powered ? Texture.INVERTER_DOWN_POWERED : Texture.INVERTER_DOWN;
+					break;
+				}
+				case Direction.LEFT: {
+					topTexture = component.powered ? Texture.INVERTER_LEFT_POWERED : Texture.INVERTER_LEFT;
+					break;
+				}
+				case Direction.RIGHT: {
+					topTexture = component.powered ? Texture.INVERTER_RIGHT_POWERED : Texture.INVERTER_RIGHT;
+					break;
+				}
+			}
+			if(getGridSquareComponentRelative(x, y, Direction.UP) instanceof WireComponent) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_UP_POWERED : Texture.WIRE_UP);
+				LogicSimulator.instance.drawTextureGridPosition(x, y);
+			}
+			if(getGridSquareComponentRelative(x, y, Direction.DOWN) instanceof WireComponent) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_DOWN_POWERED : Texture.WIRE_DOWN);
+				LogicSimulator.instance.drawTextureGridPosition(x, y);
+			}
+			if(getGridSquareComponentRelative(x, y, Direction.LEFT) instanceof WireComponent) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_LEFT_POWERED : Texture.WIRE_LEFT);
+				LogicSimulator.instance.drawTextureGridPosition(x, y);
+			}
+			if(getGridSquareComponentRelative(x, y, Direction.RIGHT) instanceof WireComponent) {
+				LogicSimulator.instance.prepareDrawTexture(component.powered ? Texture.WIRE_RIGHT_POWERED : Texture.WIRE_RIGHT);
+				LogicSimulator.instance.drawTextureGridPosition(x, y);
+			}
+
+			if(topTexture != null) {
+				LogicSimulator.instance.prepareDrawTexture(topTexture);
+				LogicSimulator.instance.drawTextureGridPosition(x, y);
+
+				return;
+			}
+		}
+
+		// TODO - Future
+	}
+	
+	public GridSquare getGridSquareRelative(int x, int y, int direction) {
+		switch(direction) {
+			case Direction.UP: {
+				y--;
 				break;
 			}
-			case GridComponent.INVERTER_DOWN: {
-				topTexture = powered ? Texture.INVERTER_DOWN_POWERED : Texture.INVERTER_DOWN;
+			case Direction.DOWN: {
+				y++;
 				break;
 			}
-			case GridComponent.INVERTER_LEFT: {
-				topTexture = powered ? Texture.INVERTER_LEFT_POWERED : Texture.INVERTER_LEFT;
+			case Direction.LEFT: {
+				x--;
 				break;
 			}
-			case GridComponent.INVERTER_RIGHT: {
-				topTexture = powered ? Texture.INVERTER_RIGHT_POWERED : Texture.INVERTER_RIGHT;
+			case Direction.RIGHT: {
+				x++;
 				break;
 			}
 		}
 
-		if(LogicSimulator.instance.getGridSquareComponent(x, y - 1) == GridComponent.WIRE) {
-			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_UP_POWERED : Texture.WIRE_UP);
-			LogicSimulator.instance.drawTextureGridPosition(x, y);
-		}
-		if(LogicSimulator.instance.getGridSquareComponent(x, y + 1) == GridComponent.WIRE) {
-			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_DOWN_POWERED : Texture.WIRE_DOWN);
-			LogicSimulator.instance.drawTextureGridPosition(x, y);
-		}
-		if(LogicSimulator.instance.getGridSquareComponent(x - 1, y) == GridComponent.WIRE) {
-			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_LEFT_POWERED : Texture.WIRE_LEFT);
-			LogicSimulator.instance.drawTextureGridPosition(x, y);
-		}
-		if(LogicSimulator.instance.getGridSquareComponent(x + 1, y) == GridComponent.WIRE) {
-			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_RIGHT_POWERED : Texture.WIRE_RIGHT);
-			LogicSimulator.instance.drawTextureGridPosition(x, y);
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
 		}
 
-		if(topTexture != null) {
-			LogicSimulator.instance.prepareDrawTexture(topTexture);
-			LogicSimulator.instance.drawTextureGridPosition(x, y);
+		return LogicSimulator.grid[x][y];
+	}
+
+	public GridSquare getGridSquare(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
+		}
+
+		return LogicSimulator.grid[x][y];
+	}
+
+	public GridComponent getGridSquareComponentRelative(int x, int y, int direction) {
+		switch(direction) {
+			case Direction.UP: {
+				y--;
+				break;
+			}
+			case Direction.DOWN: {
+				y++;
+				break;
+			}
+			case Direction.LEFT: {
+				x--;
+				break;
+			}
+			case Direction.RIGHT: {
+				x++;
+				break;
+			}
+		}
+
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
+		}
+
+		return LogicSimulator.grid[x][y].component;
+	}
+
+	public GridComponent getGridSquareComponent(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
+		}
+
+		return LogicSimulator.grid[x][y].component;
+	}
+
+	public void powerGridSquare(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return;
+		}
+
+		if(!LogicSimulator.grid[x][y].component.powered) {
+			LogicSimulator.grid[x][y].component.powered = true;
+		}
+	}
+
+	public void powerGridSquareAndUpdate(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return;
+		}
+
+		if(!LogicSimulator.grid[x][y].component.powered) {
+			LogicSimulator.grid[x][y].component.powered = true;
+			LogicSimulator.grid[x][y].update();
 		}
 	}
 }

@@ -15,15 +15,17 @@ public final class LogicSimulator extends GLFWManager {
 		new LogicSimulator().run();
 	}
 
+	static LogicSimulator instance;
+
+	static final int GRID_WIDTH = 40;
+	static final int GRID_HEIGHT = 20;
+	static GridSquare[][] grid = new GridSquare[GRID_WIDTH][GRID_HEIGHT];
+
+	private static Texture currentTexture;
+
 	int orthograhpicProgram;
 	int vbo;
 	int vao;
-
-	private Texture currentTexture;
-
-	private GridSquare[][] grid = new GridSquare[GRID_WIDTH][GRID_HEIGHT];
-
-	static LogicSimulator instance;
 
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
@@ -90,19 +92,19 @@ public final class LogicSimulator extends GLFWManager {
 		}
 
 		// Exmaple Grid
-		grid[0][0].component = GridComponent.INVERTER_RIGHT;
-		grid[0][1].component = GridComponent.INVERTER_RIGHT;
-		grid[0][2].component = GridComponent.INVERTER_RIGHT;
-		grid[0][3].component = GridComponent.INVERTER_RIGHT;
+		grid[0][0].component = new InverterComponent(Direction.RIGHT);
+		grid[0][1].component = new InverterComponent(Direction.RIGHT);
+		grid[0][2].component = new InverterComponent(Direction.RIGHT);
+		grid[0][3].component = new InverterComponent(Direction.RIGHT);
 
-		grid[1][0].component = GridComponent.WIRE;
-		grid[1][1].component = GridComponent.WIRE;
-		grid[1][2].component = GridComponent.WIRE;
-		grid[1][3].component = GridComponent.WIRE;
+		grid[1][0].component = new WireComponent();
+		grid[1][1].component = new WireComponent();
+		grid[1][2].component = new WireComponent();
+		grid[1][3].component = new WireComponent();
 
-		grid[2][0].component = GridComponent.INVERTER_RIGHT;
+		grid[2][0].component = new InverterComponent(Direction.RIGHT);
 
-		grid[3][0].component = GridComponent.WIRE;
+		grid[3][0].component = new WireComponent();
 
 		// Update Grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
@@ -128,25 +130,6 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 1.0F, 1.0F, 1.0F,
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
-
-	public static final int GRID_WIDTH = 40;
-	public static final int GRID_HEIGHT = 20;
-
-	public GridSquare getGridSquare(int x, int y) {
-		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
-			return null;
-		}
-
-		return grid[x][y];
-	}
-
-	public int getGridSquareComponent(int x, int y) {
-		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
-			return GridComponent.NONE;
-		}
-
-		return grid[x][y].component;
-	}
 
 	private void loop() {
 		do {
@@ -181,6 +164,7 @@ public final class LogicSimulator extends GLFWManager {
 
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
+				grid[x][y].update();
 				grid[x][y].render();
 			}
 		}
@@ -297,31 +281,21 @@ public final class LogicSimulator extends GLFWManager {
 		);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
-
-	void drawTextureExactPosition(float xExactOffset, float yExactOffset) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xExactOffset, yExactOffset, 0)
-						.scale(currentTexture.width, currentTexture.height, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 //		glBindTexture(GL_TEXTURE_2D, 0);
 //		glBindVertexArray(0);
 	}
 
-	void drawTextureGridPosition(int xOffset, int yOffset) {
-		drawTextureExactPosition(xOffset * currentTexture.width, yOffset * currentTexture.height);
+	void drawTextureExactPosition(float xExact, float yExact) {
+		drawTextureExact(xExact, yExact, 1, 1);
 	}
 
-	void drawTextureRatioPosition(float xRatioOffset, float yRatioOffset) {
-		drawTextureExactPosition(xRatioOffset * windowWidth, yRatioOffset * windowHeight);
+	void drawTextureGridPosition(int xGrid, int yGrid) {
+		drawTextureExactPosition(xGrid * currentTexture.width, yGrid * currentTexture.height);
+	}
+
+	void drawTextureRatioPosition(float xGridRatio, float yGridOffset) {
+		drawTextureExactPosition(xGridRatio * windowWidth, yGridOffset * windowHeight);
 	}
 
 	@Override
@@ -331,6 +305,23 @@ public final class LogicSimulator extends GLFWManager {
 
 	@Override
 	void mouseButtonCallback(long window, int button, int action, int mods) {
+		if(action != 0) {
+			return;
+		}
 
+		updateCursorPosition();
+
+		int x = (int) cursorX / 32;
+		int y = (int) cursorY / 32;
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return;
+		}
+
+		final GridSquare target = LogicSimulator.grid[x][y];
+		if(target.component == null) {
+			target.component = new WireComponent();
+		} else if(target.component instanceof WireComponent) {
+			target.component = null;
+		}
 	}
 }

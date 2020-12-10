@@ -5,7 +5,9 @@ package com.github.xt449.logicsimulator;
  */
 public abstract class GridComponent {
 
-	public static final int NONE =           0b0000;
+	boolean powered = false;
+
+	/*public static final int NONE =           0b0000;
 	public static final int WIRE =           0b0001;
 
 	public static final int INVERTER_UP =    0b0100;
@@ -15,5 +17,11 @@ public abstract class GridComponent {
 
 	public static boolean isInverter(int component) {
 		return component >= INVERTER_UP && component <= INVERTER_RIGHT;
+	}*/
+
+	//public static final GridSquare NONE = null;
+
+	boolean redirectsWireFrom(int direction) {
+		return false;
 	}
 }

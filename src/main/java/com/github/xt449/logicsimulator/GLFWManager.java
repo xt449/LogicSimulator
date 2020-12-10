@@ -19,6 +19,9 @@ abstract class GLFWManager {
 	int windowWidth = initialWidth;
 	int windowHeight = initialHeight;
 
+	double cursorX = 0;
+	double cursorY = 0;
+
 	private long window;
 
 	void initialize() {
@@ -143,4 +146,12 @@ abstract class GLFWManager {
 //		windowWidth = width;
 //		windowHeight = height;
 //	}
+
+	void updateCursorPosition() {
+		final double[] x = new double[1];
+		final double[] y = new double[1];
+		GLFW.glfwGetCursorPos(window, x, y);
+		cursorX = x[0];
+		cursorY = y[0];
+	}
 }
