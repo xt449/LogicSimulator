@@ -10,6 +10,6 @@ import java.util.stream.Collectors;
 abstract class ResourceLoader {
 
 	static String readAllLines(String resourceLocation) {
-		return new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream(resourceLocation))).lines().collect(Collectors.joining("\n"));
+		return new BufferedReader(new InputStreamReader(LogicSimulator.class.getResourceAsStream(resourceLocation))).lines().collect(Collectors.joining("\n"));
 	}
 }

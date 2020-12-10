@@ -46,10 +46,10 @@ abstract class GLFWManager {
 		}
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		// TODO - GLFW.glfwSetKeyCallback(window, this::keyCallback);
+		GLFW.glfwSetKeyCallback(window, this::keyCallback);
 
 		// Setup a mouse button callback. It will be called every time a mouse button is pressed or released.
-		// TODO - GLFW.glfwSetMouseButtonCallback(window, this::mouseButtonCallback);
+		GLFW.glfwSetMouseButtonCallback(window, this::mouseButtonCallback);
 
 		// Get the thread stack and push a new frame
 		try(MemoryStack stack = MemoryStack.stackPush()) {

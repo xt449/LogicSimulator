@@ -1,7 +1,6 @@
 package com.github.xt449.logicsimulator;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.Version;
 import org.lwjgl.opengl.GL;
 
@@ -10,15 +9,17 @@ import static org.lwjgl.opengl.GL33C.*;
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
-public final class Main extends GLFWManager {
+public final class LogicSimulator extends GLFWManager {
 
 	public static void main(String[] args) {
-		new Main().run();
+		new LogicSimulator().run();
 	}
 
 	int orthograhpicProgram;
 	int vbo;
 	int vao;
+
+	private Texture currentTexture;
 
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
@@ -192,8 +193,6 @@ public final class Main extends GLFWManager {
 		//
 	}
 
-	private Texture currentTexture;
-
 	private void prepareDrawTexture(Texture texture) {
 		currentTexture = texture;
 
@@ -203,65 +202,13 @@ public final class Main extends GLFWManager {
 
 		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
 
+		//
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
 
 		glBindVertexArray(vao);
 	}
-
-	/*private void prepareDrawTexture(Texture texture, int x, int y) {
-		currentTexture = texture;
-
-		glUseProgram(orthograhpicProgram);
-
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(new Vector3f(x, y, 0))
-						.scale(32)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
-
-		glBindVertexArray(vao);
-//		glDrawArrays(GL_TRIANGLES, 0, 6);
-//
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
-	}
-
-	private void prepareDrawTexture(Texture texture, float xRatio, float yRatio) {
-		currentTexture = texture;
-
-		glUseProgram(orthograhpicProgram);
-
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(new Vector3f(xRatio, yRatio, 0).mul(new Vector3f(windowSize.x, windowSize.y, 0)))
-						.scale(32)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
-
-		glBindVertexArray(vao);
-//		glDrawArrays(GL_TRIANGLES, 0, 6);
-//
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
-	}*/
 
 	private void drawTexture() {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
@@ -332,10 +279,8 @@ public final class Main extends GLFWManager {
 	}
 
 	@Override
-	void keyCallback(long window, int key, int scancode, int action, int mods)  {
-		/*if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
-			GLFW.glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-		}*/
+	void keyCallback(long window, int key, int scancode, int action, int mods) {
+
 	}
 
 	@Override
