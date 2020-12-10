@@ -1,6 +1,5 @@
 package com.github.xt449.logicsimulator;
 
-import org.joml.Vector2i;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -17,7 +16,8 @@ abstract class GLFWManager {
 	final int initialWidth = 1280; //32 * 16/* * 3*/;
 	final int initialHeight = 720; //32 * 9/* * 3*/;
 
-	final Vector2i windowSize = new Vector2i();
+	int windowWidth = initialWidth;
+	int windowHeight = initialHeight;
 
 	private long window;
 
@@ -63,16 +63,16 @@ abstract class GLFWManager {
 			// Get the window size passed to glfwCreateWindow
 			GLFW.glfwGetWindowSize(window, widthPointer, heightPointer);
 
-			windowSize.x = widthPointer.get(0);
-			windowSize.y = heightPointer.get(0);
+			windowWidth = widthPointer.get(0);
+			windowHeight = heightPointer.get(0);
 
 			// Get the resolution of the primary monitor
 			GLFWVidMode videoMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 
 			// Center the window
 			GLFW.glfwSetWindowPos(window,
-					(videoMode.width() - windowSize.x) / 2,
-					(videoMode.height() - windowSize.y) / 2
+					(videoMode.width() - windowWidth) / 2,
+					(videoMode.height() - windowHeight) / 2
 			);
 		} // the stack frame is popped automatically
 
@@ -140,7 +140,7 @@ abstract class GLFWManager {
 //	 * @param height the new height, in screen coordinates, of the window
 //	 */
 //	void windowSizeCallback(long window, int width, int height) {
-//		windowSize.x = width;
-//		windowSize.y = height;
+//		windowWidth = width;
+//		windowHeight = height;
 //	}
 }

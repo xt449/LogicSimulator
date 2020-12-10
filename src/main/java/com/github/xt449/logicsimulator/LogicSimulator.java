@@ -238,7 +238,7 @@ public final class LogicSimulator extends GLFWManager {
 						.get(new float[16])
 		);
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
 						.get(new float[16])
 		);
 
@@ -255,7 +255,7 @@ public final class LogicSimulator extends GLFWManager {
 						.get(new float[16])
 		);
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
 						.get(new float[16])
 		);
 
@@ -267,12 +267,12 @@ public final class LogicSimulator extends GLFWManager {
 
 	void drawTextureRatioPosition(float xRatio, float yRatio) {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xRatio * windowSize.x, yRatio * windowSize.y, 0)
+				new Matrix4f().translate(xRatio * windowWidth, yRatio * windowHeight, 0)
 						.scale(currentTexture.width, currentTexture.height, 0)
 						.get(new float[16])
 		);
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
 						.get(new float[16])
 		);
 
