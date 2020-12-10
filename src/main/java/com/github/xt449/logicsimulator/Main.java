@@ -24,7 +24,7 @@ public final class Main extends GLFWManager {
 		System.out.println("LWJGL " + Version.getVersion());
 
 		// Initialize
-		init();
+		initialize();
 
 		GL.createCapabilities();
 		glEnable(GL_TEXTURE_2D);
@@ -91,7 +91,7 @@ public final class Main extends GLFWManager {
 
 			0.0F, 1.0F, 0.0F, 1.0F,
 			1.0F, 1.0F, 1.0F, 1.0F,
-			1.0F, 0.0F, 1.0F, 0.0F
+			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
 	private void loop() {
@@ -106,12 +106,112 @@ public final class Main extends GLFWManager {
 	}
 
 	private void render() {
-		renderTexture(Texture.CELL, 50, 50);
-		renderTexture(Texture.INVERTER_RIGHT, 60, 60);
-		renderTexture(Texture.INVERTER_DOWN_POWERED, 70, 77);
+		prepareDrawTexture(Texture.CELL);
+		for(int y = 0; y < 27; y++) {
+			for(int x = 0; x < 48; x++) {
+				drawTexture(x, y);
+			}
+		}
+
+		//
+
+		prepareDrawTexture(Texture.WIRE_CENTER);
+		drawTexture(3, 0);
+
+		prepareDrawTexture(Texture.WIRE_UP);
+
+		prepareDrawTexture(Texture.WIRE_DOWN);
+
+		prepareDrawTexture(Texture.WIRE_LEFT);
+		drawTexture(0, 0);
+		drawTexture(0, 1);
+		drawTexture(0, 2);
+		drawTexture(0, 3);
+		drawTexture(3, 0);
+
+		prepareDrawTexture(Texture.WIRE_RIGHT);
+		drawTexture(2, 0);
+
+		//
+
+		prepareDrawTexture(Texture.WIRE_CENTER_POWERED);
+		drawTexture(1, 0);
+		drawTexture(1, 1);
+		drawTexture(1, 2);
+		drawTexture(1, 3);
+
+		prepareDrawTexture(Texture.WIRE_UP_POWERED);
+		drawTexture(1, 1);
+		drawTexture(1, 2);
+		drawTexture(1, 3);
+
+		prepareDrawTexture(Texture.WIRE_DOWN_POWERED);
+		drawTexture(1, 0);
+		drawTexture(1, 1);
+		drawTexture(1, 2);
+
+		prepareDrawTexture(Texture.WIRE_LEFT_POWERED);
+		drawTexture(1, 0);
+		drawTexture(1, 1);
+		drawTexture(1, 2);
+		drawTexture(1, 3);
+		drawTexture(2, 0);
+
+		prepareDrawTexture(Texture.WIRE_RIGHT_POWERED);
+		drawTexture(0, 0);
+		drawTexture(0, 1);
+		drawTexture(0, 2);
+		drawTexture(0, 3);
+		drawTexture(1, 0);
+
+		//
+
+		prepareDrawTexture(Texture.INVERTER_UP);
+
+		prepareDrawTexture(Texture.INVERTER_DOWN);
+
+		prepareDrawTexture(Texture.INVERTER_LEFT);
+
+		prepareDrawTexture(Texture.INVERTER_RIGHT);
+		drawTexture(0, 0);
+		drawTexture(0, 1);
+		drawTexture(0, 2);
+		drawTexture(0, 3);
+
+		//
+
+		prepareDrawTexture(Texture.INVERTER_UP_POWERED);
+
+		prepareDrawTexture(Texture.INVERTER_DOWN_POWERED);
+
+		prepareDrawTexture(Texture.INVERTER_LEFT_POWERED);
+
+		prepareDrawTexture(Texture.INVERTER_RIGHT_POWERED);
+		drawTexture(2, 0);
+
+		//
 	}
 
-	private void renderTexture(Texture texture, int x, int y) {
+	private Texture currentTexture;
+
+	private void prepareDrawTexture(Texture texture) {
+		currentTexture = texture;
+
+		glUseProgram(orthograhpicProgram);
+
+		//
+
+		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
+
+		glBindVertexArray(vao);
+	}
+
+	/*private void prepareDrawTexture(Texture texture, int x, int y) {
+		currentTexture = texture;
+
 		glUseProgram(orthograhpicProgram);
 
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
@@ -127,16 +227,18 @@ public final class Main extends GLFWManager {
 		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
 
 		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindVertexArray(0);
+//		glDrawArrays(GL_TRIANGLES, 0, 6);
+//
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
 	}
 
-	private void renderTexture(Texture texture, float xRatio, float yRatio) {
+	private void prepareDrawTexture(Texture texture, float xRatio, float yRatio) {
+		currentTexture = texture;
+
 		glUseProgram(orthograhpicProgram);
 
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
@@ -152,12 +254,92 @@ public final class Main extends GLFWManager {
 		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
 
 		glBindVertexArray(vao);
+//		glDrawArrays(GL_TRIANGLES, 0, 6);
+//
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
+	}*/
+
+	private void drawTexture() {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f()
+						.scale(currentTexture.width, currentTexture.height, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+						.get(new float[16])
+		);
+
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindVertexArray(0);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindVertexArray(0);
+	}
+
+	private void drawTexture(int xOffset, int yOffset) {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f().translate(xOffset * currentTexture.width, yOffset * currentTexture.height, 0)
+						.scale(currentTexture.width, currentTexture.height, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+						.get(new float[16])
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindVertexArray(0);
+	}
+
+	private void drawTextureExactPosition(float xRatio, float yRatio) {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f().translate(xRatio * windowSize.x, yRatio * windowSize.y, 0)
+						.scale(currentTexture.width, currentTexture.height, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+						.get(new float[16])
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindVertexArray(0);
+	}
+
+	private void drawTextureRatioPosition(int xOffset, int yOffset) {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f().translate(xOffset * currentTexture.width, yOffset * currentTexture.height, 0)
+						.scale(currentTexture.width, currentTexture.height, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+						.get(new float[16])
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindVertexArray(0);
+	}
+
+	@Override
+	void keyCallback(long window, int key, int scancode, int action, int mods)  {
+		/*if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
+			GLFW.glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+		}*/
+	}
+
+	@Override
+	void mouseButtonCallback(long window, int button, int action, int mods) {
+
 	}
 }

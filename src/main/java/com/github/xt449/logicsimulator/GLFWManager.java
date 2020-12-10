@@ -14,14 +14,14 @@ import java.nio.IntBuffer;
  */
 abstract class GLFWManager {
 
-	final int initialWidth = 1280;
-	final int initialHeight = 720;
+	final int initialWidth = 32 * 16/* * 3*/;
+	final int initialHeight = 32 * 9/* * 3*/;
 
 	final Vector2i windowSize = new Vector2i();
 
 	private long window;
 
-	void init() {
+	void initialize() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -40,19 +40,16 @@ abstract class GLFWManager {
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
 
 		// Create the window
-		window = GLFW.glfwCreateWindow(initialWidth, initialHeight, "Hello World!", 0, 0);
+		window = GLFW.glfwCreateWindow(initialWidth, initialHeight, "Logic Simulator", 0, 0);
 		if(window == 0) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 
-		/*
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
-				GLFW.glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-			}
-		});
-		*/
+		// TODO - GLFW.glfwSetKeyCallback(window, this::keyCallback);
+
+		// Setup a mouse button callback. It will be called every time a mouse button is pressed or released.
+		// TODO - GLFW.glfwSetMouseButtonCallback(window, this::mouseButtonCallback);
 
 		// Get the thread stack and push a new frame
 		try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -109,4 +106,25 @@ abstract class GLFWManager {
 	boolean shouldClose() {
 		return GLFW.glfwWindowShouldClose(window);
 	}
+
+	/**
+	 * Will be called when a key is pressed, repeated or released.
+	 *
+	 * @param window   the window that received the event
+	 * @param key      the keyboard key that was pressed or released
+	 * @param scancode the system-specific scancode of the key
+	 * @param action   the key action. One of:<br><table><tr><td>{@link GLFW#GLFW_PRESS PRESS}</td><td>{@link GLFW#GLFW_RELEASE RELEASE}</td><td>{@link GLFW#GLFW_REPEAT REPEAT}</td></tr></table>
+	 * @param mods     bitfield describing which modifiers keys were held down
+	 */
+	abstract void keyCallback(long window, int key, int scancode, int action, int mods);
+
+	/**
+	 * Will be called when a mouse button is pressed or released.
+	 *
+	 * @param window the window that received the event
+	 * @param button the mouse button that was pressed or released
+	 * @param action the button action. One of:<br><table><tr><td>{@link GLFW#GLFW_PRESS PRESS}</td><td>{@link GLFW#GLFW_RELEASE RELEASE}</td><td>{@link GLFW#GLFW_REPEAT REPEAT}</td></tr></table>
+	 * @param mods   bitfield describing which modifiers keys were held down
+	 */
+	abstract void mouseButtonCallback(long window, int button, int action, int mods);
 }
