@@ -89,6 +89,28 @@ public final class LogicSimulator extends GLFWManager {
 			}
 		}
 
+		// Exmaple Grid
+		grid[0][0].component = GridComponent.INVERTER_RIGHT;
+		grid[0][1].component = GridComponent.INVERTER_RIGHT;
+		grid[0][2].component = GridComponent.INVERTER_RIGHT;
+		grid[0][3].component = GridComponent.INVERTER_RIGHT;
+
+		grid[1][0].component = GridComponent.WIRE;
+		grid[1][1].component = GridComponent.WIRE;
+		grid[1][2].component = GridComponent.WIRE;
+		grid[1][3].component = GridComponent.WIRE;
+
+		grid[2][0].component = GridComponent.INVERTER_RIGHT;
+
+		grid[3][0].component = GridComponent.WIRE;
+
+		// Update Grid
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				grid[x][y].update();
+			}
+		}
+
 		// Loop
 		loop();
 
@@ -110,13 +132,13 @@ public final class LogicSimulator extends GLFWManager {
 	public static final int GRID_WIDTH = 40;
 	public static final int GRID_HEIGHT = 20;
 
-	/*public GridSquare getGridSquare(int x, int y) {
+	public GridSquare getGridSquare(int x, int y) {
 		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
 			return null;
 		}
 
 		return grid[x][y];
-	}*/
+	}
 
 	public int getGridSquareComponent(int x, int y) {
 		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
@@ -157,7 +179,15 @@ public final class LogicSimulator extends GLFWManager {
 
 		//
 
-		prepareDrawTexture(Texture.WIRE_CENTER);
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				grid[x][y].render();
+			}
+		}
+
+		//
+
+		/*prepareDrawTexture(Texture.WIRE_CENTER);
 		drawTextureGridPosition(3, 0);
 
 		prepareDrawTexture(Texture.WIRE_UP);
@@ -229,7 +259,7 @@ public final class LogicSimulator extends GLFWManager {
 		prepareDrawTexture(Texture.INVERTER_LEFT_POWERED);
 
 		prepareDrawTexture(Texture.INVERTER_RIGHT_POWERED);
-		drawTextureGridPosition(2, 0);
+		drawTextureGridPosition(2, 0);*/
 
 		//
 
