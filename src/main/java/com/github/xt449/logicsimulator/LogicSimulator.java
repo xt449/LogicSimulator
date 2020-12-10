@@ -21,9 +21,14 @@ public final class LogicSimulator extends GLFWManager {
 
 	private Texture currentTexture;
 
+	private GridSquare[][] grid = new GridSquare[GRID_WIDTH][GRID_HEIGHT];
+
+	static LogicSimulator instance;
+
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
 
+		LogicSimulator.instance = this;
 		// Initialize
 		initialize();
 
@@ -77,6 +82,13 @@ public final class LogicSimulator extends GLFWManager {
 		// Textures
 		Texture.init();
 
+		// Populate Grid
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				grid[x][y] = new GridSquare(x, y);
+			}
+		}
+
 		// Loop
 		loop();
 
@@ -95,6 +107,25 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
+	public static final int GRID_WIDTH = 40;
+	public static final int GRID_HEIGHT = 20;
+
+	/*public GridSquare getGridSquare(int x, int y) {
+		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
+			return null;
+		}
+
+		return grid[x][y];
+	}*/
+
+	public int getGridSquareComponent(int x, int y) {
+		if(x < 0 || x > GRID_WIDTH || y < 0 || y > GRID_HEIGHT) {
+			return GridComponent.NONE;
+		}
+
+		return grid[x][y].component;
+	}
+
 	private void loop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
@@ -107,12 +138,22 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	private void render() {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, new float[] {
+				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
+				1.0F, 0.0F, GRID_WIDTH, 0.0F,
+				0.0F, 0.0F, 0.0F, 0.0F,
+
+				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
+				1.0F, 1.0F, GRID_WIDTH, GRID_HEIGHT,
+				1.0F, 0.0F, GRID_WIDTH, 0.0F,
+		}, GL_STATIC_DRAW);
+		// Draw entire grid
 		prepareDrawTexture(Texture.CELL);
-		for(int y = 0; y < 20; y++) {
-			for(int x = 0; x < 40 + 48; x++) {
-				drawTextureGridPosition(x, y);
-			}
-		}
+		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
 		//
 
@@ -214,14 +255,28 @@ public final class LogicSimulator extends GLFWManager {
 		glBindVertexArray(vao);
 	}
 
-	/*void drawTexture() {
+	void drawTextureExact(float xPosition, float yPosition, float xScale, float yScale) {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f()
+				new Matrix4f().translate(xPosition, yPosition, 0)
+						.scale(currentTexture.width * xScale, currentTexture.height * yScale, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
+						.get(new float[16])
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+
+	void drawTextureExactPosition(float xExactOffset, float yExactOffset) {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f().translate(xExactOffset, yExactOffset, 0)
 						.scale(currentTexture.width, currentTexture.height, 0)
 						.get(new float[16])
 		);
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
 						.get(new float[16])
 		);
 
@@ -229,57 +284,14 @@ public final class LogicSimulator extends GLFWManager {
 
 //		glBindTexture(GL_TEXTURE_2D, 0);
 //		glBindVertexArray(0);
-	}*/
+	}
 
 	void drawTextureGridPosition(int xOffset, int yOffset) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xOffset * currentTexture.width, yOffset * currentTexture.height, 0)
-						.scale(currentTexture.width, currentTexture.height, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
+		drawTextureExactPosition(xOffset * currentTexture.width, yOffset * currentTexture.height);
 	}
 
-	void drawTextureExactPosition(int xOffset, int yOffset) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xOffset, yOffset, 0)
-						.scale(currentTexture.width, currentTexture.height, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
-	}
-
-	void drawTextureRatioPosition(float xRatio, float yRatio) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xRatio * windowWidth, yRatio * windowHeight, 0)
-						.scale(currentTexture.width, currentTexture.height, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
+	void drawTextureRatioPosition(float xRatioOffset, float yRatioOffset) {
+		drawTextureExactPosition(xRatioOffset * windowWidth, yRatioOffset * windowHeight);
 	}
 
 	@Override
