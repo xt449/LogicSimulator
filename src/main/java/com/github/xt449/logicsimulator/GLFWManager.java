@@ -14,8 +14,8 @@ import java.nio.IntBuffer;
  */
 abstract class GLFWManager {
 
-	final int initialWidth = 32 * 16/* * 3*/;
-	final int initialHeight = 32 * 9/* * 3*/;
+	final int initialWidth = 1280; //32 * 16/* * 3*/;
+	final int initialHeight = 720; //32 * 9/* * 3*/;
 
 	final Vector2i windowSize = new Vector2i();
 
@@ -35,6 +35,7 @@ abstract class GLFWManager {
 		GLFW.glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE); // the window will stay hidden after creation
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE); // the window will NOT be resizable
+		// TODO - GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE); // the window will be resizable
 
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -50,6 +51,9 @@ abstract class GLFWManager {
 
 		// Setup a mouse button callback. It will be called every time a mouse button is pressed or released.
 		GLFW.glfwSetMouseButtonCallback(window, this::mouseButtonCallback);
+
+		// Setup more callbacks...
+//		GLFW.glfwSetWindowSizeCallback(window, this::windowSizeCallback);
 
 		// Get the thread stack and push a new frame
 		try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -127,4 +131,16 @@ abstract class GLFWManager {
 	 * @param mods   bitfield describing which modifiers keys were held down
 	 */
 	abstract void mouseButtonCallback(long window, int button, int action, int mods);
+
+//	/**
+//	 * Will be called when the specified window is resized.
+//	 *
+//	 * @param window the window that was resized
+//	 * @param width  the new width, in screen coordinates, of the window
+//	 * @param height the new height, in screen coordinates, of the window
+//	 */
+//	void windowSizeCallback(long window, int width, int height) {
+//		windowSize.x = width;
+//		windowSize.y = height;
+//	}
 }

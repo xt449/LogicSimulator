@@ -5,8 +5,12 @@ package com.github.xt449.logicsimulator;
  */
 public class GridSquare {
 
-	public GridSquare(int x, int y) {
+	private final int x;
+	private final int y;
 
+	public GridSquare(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 }

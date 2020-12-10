@@ -56,7 +56,7 @@ public final class LogicSimulator extends GLFWManager {
 		if(glGetProgrami(orthograhpicProgram, GL_LINK_STATUS) == GL_FALSE) {
 			System.out.println(glGetProgramInfoLog(orthograhpicProgram));
 		}
-		//glUseProgram(orthograhpicProgram);
+//		glUseProgram(orthograhpicProgram);
 
 		glDeleteShader(orthograhpicVertexShader);
 		glDeleteShader(orthograhpicFragmentShader);
@@ -108,62 +108,62 @@ public final class LogicSimulator extends GLFWManager {
 
 	private void render() {
 		prepareDrawTexture(Texture.CELL);
-		for(int y = 0; y < 27; y++) {
-			for(int x = 0; x < 48; x++) {
-				drawTexture(x, y);
+		for(int y = 0; y < 20; y++) {
+			for(int x = 0; x < 40 + 48; x++) {
+				drawTextureGridPosition(x, y);
 			}
 		}
 
 		//
 
 		prepareDrawTexture(Texture.WIRE_CENTER);
-		drawTexture(3, 0);
+		drawTextureGridPosition(3, 0);
 
 		prepareDrawTexture(Texture.WIRE_UP);
 
 		prepareDrawTexture(Texture.WIRE_DOWN);
 
 		prepareDrawTexture(Texture.WIRE_LEFT);
-		drawTexture(0, 0);
-		drawTexture(0, 1);
-		drawTexture(0, 2);
-		drawTexture(0, 3);
-		drawTexture(3, 0);
+		drawTextureGridPosition(0, 0);
+		drawTextureGridPosition(0, 1);
+		drawTextureGridPosition(0, 2);
+		drawTextureGridPosition(0, 3);
+		drawTextureGridPosition(3, 0);
 
 		prepareDrawTexture(Texture.WIRE_RIGHT);
-		drawTexture(2, 0);
+		drawTextureGridPosition(2, 0);
 
 		//
 
 		prepareDrawTexture(Texture.WIRE_CENTER_POWERED);
-		drawTexture(1, 0);
-		drawTexture(1, 1);
-		drawTexture(1, 2);
-		drawTexture(1, 3);
+		drawTextureGridPosition(1, 0);
+		drawTextureGridPosition(1, 1);
+		drawTextureGridPosition(1, 2);
+		drawTextureGridPosition(1, 3);
 
 		prepareDrawTexture(Texture.WIRE_UP_POWERED);
-		drawTexture(1, 1);
-		drawTexture(1, 2);
-		drawTexture(1, 3);
+		drawTextureGridPosition(1, 1);
+		drawTextureGridPosition(1, 2);
+		drawTextureGridPosition(1, 3);
 
 		prepareDrawTexture(Texture.WIRE_DOWN_POWERED);
-		drawTexture(1, 0);
-		drawTexture(1, 1);
-		drawTexture(1, 2);
+		drawTextureGridPosition(1, 0);
+		drawTextureGridPosition(1, 1);
+		drawTextureGridPosition(1, 2);
 
 		prepareDrawTexture(Texture.WIRE_LEFT_POWERED);
-		drawTexture(1, 0);
-		drawTexture(1, 1);
-		drawTexture(1, 2);
-		drawTexture(1, 3);
-		drawTexture(2, 0);
+		drawTextureGridPosition(1, 0);
+		drawTextureGridPosition(1, 1);
+		drawTextureGridPosition(1, 2);
+		drawTextureGridPosition(1, 3);
+		drawTextureGridPosition(2, 0);
 
 		prepareDrawTexture(Texture.WIRE_RIGHT_POWERED);
-		drawTexture(0, 0);
-		drawTexture(0, 1);
-		drawTexture(0, 2);
-		drawTexture(0, 3);
-		drawTexture(1, 0);
+		drawTextureGridPosition(0, 0);
+		drawTextureGridPosition(0, 1);
+		drawTextureGridPosition(0, 2);
+		drawTextureGridPosition(0, 3);
+		drawTextureGridPosition(1, 0);
 
 		//
 
@@ -174,10 +174,10 @@ public final class LogicSimulator extends GLFWManager {
 		prepareDrawTexture(Texture.INVERTER_LEFT);
 
 		prepareDrawTexture(Texture.INVERTER_RIGHT);
-		drawTexture(0, 0);
-		drawTexture(0, 1);
-		drawTexture(0, 2);
-		drawTexture(0, 3);
+		drawTextureGridPosition(0, 0);
+		drawTextureGridPosition(0, 1);
+		drawTextureGridPosition(0, 2);
+		drawTextureGridPosition(0, 3);
 
 		//
 
@@ -188,12 +188,16 @@ public final class LogicSimulator extends GLFWManager {
 		prepareDrawTexture(Texture.INVERTER_LEFT_POWERED);
 
 		prepareDrawTexture(Texture.INVERTER_RIGHT_POWERED);
-		drawTexture(2, 0);
+		drawTextureGridPosition(2, 0);
 
 		//
+
+		// TODO - Debug
+//      prepareDrawTexture(Texture.WIRE_CENTER_POWERED);
+//      drawTextureRatioPosition(0.5F, 0.5F);
 	}
 
-	private void prepareDrawTexture(Texture texture) {
+	void prepareDrawTexture(Texture texture) {
 		currentTexture = texture;
 
 		glUseProgram(orthograhpicProgram);
@@ -210,7 +214,7 @@ public final class LogicSimulator extends GLFWManager {
 		glBindVertexArray(vao);
 	}
 
-	private void drawTexture() {
+	/*void drawTexture() {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
 				new Matrix4f()
 						.scale(currentTexture.width, currentTexture.height, 0)
@@ -223,11 +227,11 @@ public final class LogicSimulator extends GLFWManager {
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//glBindVertexArray(0);
-	}
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
+	}*/
 
-	private void drawTexture(int xOffset, int yOffset) {
+	void drawTextureGridPosition(int xOffset, int yOffset) {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
 				new Matrix4f().translate(xOffset * currentTexture.width, yOffset * currentTexture.height, 0)
 						.scale(currentTexture.width, currentTexture.height, 0)
@@ -240,11 +244,28 @@ public final class LogicSimulator extends GLFWManager {
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//glBindVertexArray(0);
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
 	}
 
-	private void drawTextureExactPosition(float xRatio, float yRatio) {
+	void drawTextureExactPosition(int xOffset, int yOffset) {
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
+				new Matrix4f().translate(xOffset, yOffset, 0)
+						.scale(currentTexture.width, currentTexture.height, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
+				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
+						.get(new float[16])
+		);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
+	}
+
+	void drawTextureRatioPosition(float xRatio, float yRatio) {
 		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
 				new Matrix4f().translate(xRatio * windowSize.x, yRatio * windowSize.y, 0)
 						.scale(currentTexture.width, currentTexture.height, 0)
@@ -257,25 +278,8 @@ public final class LogicSimulator extends GLFWManager {
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//glBindVertexArray(0);
-	}
-
-	private void drawTextureRatioPosition(int xOffset, int yOffset) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xOffset * currentTexture.width, yOffset * currentTexture.height, 0)
-						.scale(currentTexture.width, currentTexture.height, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowSize.x, windowSize.y, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//glBindVertexArray(0);
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindVertexArray(0);
 	}
 
 	@Override
