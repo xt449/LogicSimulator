@@ -114,7 +114,7 @@ public final class LogicSimulator extends GLFWManager {
 		grid[1][0].component = new WireComponent();
 		grid[1][1].component = new WireComponent();
 		grid[0][0].component.powered = true;
-		grid[0][1].component.powered = true;
+		grid[1][0].component.powered = true;
 
 		/*grid[0][0].component = new InverterComponent(Direction.RIGHT);
 		grid[0][1].component = new InverterComponent(Direction.RIGHT);

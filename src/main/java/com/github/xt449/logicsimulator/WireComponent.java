@@ -21,41 +21,35 @@ public class WireComponent extends GridComponent {
 	@Override
 	void tick(GridSquare gridSquare) {
 		if(powered) {
-			/*final GridSquare square = gridSquare.getRelativeGridSquare(poweredFromDirection);
-			if(square != null) {
-				if(square.component != null) {
-					if(square.component instanceof WireComponent) {
-						if(square.component.powered) {
-							powered = true;
-						}
-					} else if(square.component instanceof InverterComponent) {
-						if(!square.component.powered && (poweredFromDirection == Direction.getDirectionReversed(((InverterComponent) square.component).getDirection()))) {
-							powered = true;
+			//int backTrackCount = 0;
+			GridSquare currentSquare = gridSquare;
+			GridSquare currentSource;
+			//do {
+				currentSource = currentSquare.getRelativeGridSquare(poweredFromDirection);
+				if(currentSource == null) {
+					currentSquare.component.powered = false;
+					//break;
+				} else {
+					if(currentSource.component == null) {
+						currentSquare.component.powered = false;
+						//break;
+					} else {
+						if(currentSource.component instanceof WireComponent) {
+							if(!currentSource.component.powered) {
+								currentSquare.component.powered = false;
+								//break;
+							}
+						} else if(currentSource.component instanceof InverterComponent) {
+							currentSquare.component.powered = !currentSource.component.powered && (((WireComponent) currentSquare.component).poweredFromDirection == Direction.getDirectionReversed(((InverterComponent) currentSource.component).getDirection()));
+							//break;
 						}
 					}
 				}
-			}*/
-			boolean powered = false;
-			for(int direction = 0; direction < 4; direction++) {
-				final GridSquare square = gridSquare.getRelativeGridSquare(direction);
-				if(square != null) {
-					if(square.component != null) {
-						if(square.component instanceof WireComponent) {
-							if(square.component.powered) {
-								powered = true;
-							}
-						} else if(square.component instanceof InverterComponent) {
-							if(!square.component.powered && (direction == Direction.getDirectionReversed(((InverterComponent) square.component).getDirection()))) {
-								powered = true;
-							}
-						}
-					}
-				}
-			}
-			if(!powered) {
-				this.powered = false;
-				return;
-			}
+				currentSquare = currentSource;
+			//} while(++backTrackCount < 32);
+
+			//final GridSquare testSquare = gridSquare.getRelativeGridSquare(poweredFromDirection);
+			//final boolean powered = (testSquare != null) && (testSquare.component != null) && ((testSquare.component instanceof WireComponent) ? testSquare.component.powered : ((testSquare.component instanceof InverterComponent) && !testSquare.component.powered && (poweredFromDirection == Direction.getDirectionReversed(((InverterComponent) testSquare.component).getDirection()))));
 
 			for(int direction = 0; direction < 4; direction++) {
 				if(direction == poweredFromDirection) {
@@ -83,8 +77,10 @@ public class WireComponent extends GridComponent {
 			}
 		}
 
-		// TODO - LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_CENTER_POWERED : Texture.WIRE_CENTER);
-		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredInverter(Direction.getDirectionReversed(poweredFromDirection)) : Texture.getInverter(Direction.getDirectionReversed(poweredFromDirection)));
+		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_CENTER_POWERED : Texture.WIRE_CENTER);
+		LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
+
+		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getArrow(Direction.getDirectionReversed(poweredFromDirection)) : Texture.getArrow(Direction.getDirectionReversed(poweredFromDirection)));
 		LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 	}
 }

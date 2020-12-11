@@ -3,14 +3,26 @@ package com.github.xt449.logicsimulator;
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
-public class InverterComponent extends DiodeComponent {
+public class DiodeComponent extends DirectionalGridComponent {
 
-	public InverterComponent() {
+	public DiodeComponent() {
 		super();
 	}
 
-	public InverterComponent(int direction) {
+	public DiodeComponent(int direction) {
 		super(direction);
+	}
+
+	@Override
+	boolean redirectsWireFrom(int direction) {
+		return this.direction == direction || Direction.getDirectionReversed(this.direction) == direction;
+	}
+
+	@Override
+	void power(int direction) {
+		if(Direction.getDirectionReversed(direction) == this.direction) {
+			powered = true;
+		}
 	}
 
 	@Override
@@ -46,7 +58,7 @@ public class InverterComponent extends DiodeComponent {
 			LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 		}
 
-		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredInverter(direction) : Texture.getInverter(direction));
+		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredDiode(direction) : Texture.getDiode(direction));
 		LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 	}
 }

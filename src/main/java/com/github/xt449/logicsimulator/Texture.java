@@ -105,6 +105,48 @@ public class Texture {
 			INVERTER_RIGHT_POWERED,
 	};
 
+	// Diodes
+
+	static final Texture DIODE_UP = new Texture("diode_up.png");
+	static final Texture DIODE_DOWN = new Texture("diode_down.png");
+	static final Texture DIODE_LEFT = new Texture("diode_left.png");
+	static final Texture DIODE_RIGHT = new Texture("diode_right.png");
+
+	static final Texture[] DIODES = {
+			DIODE_UP,
+			DIODE_DOWN,
+			DIODE_LEFT,
+			DIODE_RIGHT,
+	};
+
+	// Diodes Powered
+
+	static final Texture DIODE_UP_POWERED = new Texture("diode_up_powered.png");
+	static final Texture DIODE_DOWN_POWERED = new Texture("diode_down_powered.png");
+	static final Texture DIODE_LEFT_POWERED = new Texture("diode_left_powered.png");
+	static final Texture DIODE_RIGHT_POWERED = new Texture("diode_right_powered.png");
+
+	static final Texture[] DIODES_POWERED = {
+			DIODE_UP_POWERED,
+			DIODE_DOWN_POWERED,
+			DIODE_LEFT_POWERED,
+			DIODE_RIGHT_POWERED,
+	};
+
+	// Arrows
+
+	static final Texture ARROW_UP = new Texture("arrow_up.png");
+	static final Texture ARROW_DOWN = new Texture("arrow_down.png");
+	static final Texture ARROW_LEFT = new Texture("arrow_left.png");
+	static final Texture ARROW_RIGHT = new Texture("arrow_right.png");
+
+	static final Texture[] ARROWS = {
+			ARROW_UP,
+			ARROW_DOWN,
+			ARROW_LEFT,
+			ARROW_RIGHT,
+	};
+
 	static Texture getWire(int direction) {
 		switch(direction) {
 			case Direction.UP:
@@ -160,6 +202,51 @@ public class Texture {
 				return INVERTER_LEFT_POWERED;
 			case Direction.RIGHT:
 				return INVERTER_RIGHT_POWERED;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getDiode(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return DIODE_UP;
+			case Direction.DOWN:
+				return DIODE_DOWN;
+			case Direction.LEFT:
+				return DIODE_LEFT;
+			case Direction.RIGHT:
+				return DIODE_RIGHT;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getPoweredDiode(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return DIODE_UP_POWERED;
+			case Direction.DOWN:
+				return DIODE_DOWN_POWERED;
+			case Direction.LEFT:
+				return DIODE_LEFT_POWERED;
+			case Direction.RIGHT:
+				return DIODE_RIGHT_POWERED;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getArrow(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return ARROW_UP;
+			case Direction.DOWN:
+				return ARROW_DOWN;
+			case Direction.LEFT:
+				return ARROW_LEFT;
+			case Direction.RIGHT:
+				return ARROW_RIGHT;
 			default:
 				return null;
 		}
