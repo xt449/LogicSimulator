@@ -109,7 +109,14 @@ public final class LogicSimulator extends GLFWManager {
 		}
 
 		// Exmaple Grid
-		grid[0][0].component = new InverterComponent(Direction.RIGHT);
+		grid[0][0].component = new WireComponent();
+		grid[0][1].component = new WireComponent();
+		grid[1][0].component = new WireComponent();
+		grid[1][1].component = new WireComponent();
+		grid[0][0].component.powered = true;
+		grid[0][1].component.powered = true;
+
+		/*grid[0][0].component = new InverterComponent(Direction.RIGHT);
 		grid[0][1].component = new InverterComponent(Direction.RIGHT);
 		grid[0][2].component = new InverterComponent(Direction.RIGHT);
 		grid[0][3].component = new InverterComponent(Direction.RIGHT);
@@ -121,13 +128,7 @@ public final class LogicSimulator extends GLFWManager {
 
 		grid[2][0].component = new InverterComponent(Direction.RIGHT);
 
-		grid[3][0].component = new WireComponent();
-
-		// TODO: Debug
-		System.out.println(Direction.getDirectionReversed(Direction.UP));
-		System.out.println(Direction.getDirectionReversed(Direction.DOWN));
-		System.out.println(Direction.getDirectionReversed(Direction.LEFT));
-		System.out.println(Direction.getDirectionReversed(Direction.RIGHT));
+		grid[3][0].component = new WireComponent();*/
 
 		// Loop
 		loop();

@@ -87,13 +87,13 @@ public class GridSquare {
 		return LogicSimulator.getGridComponent(x, y);
 	}
 
-	void power(int direction) {
+	/*void powerExtra(int direction) {
 		if(component != null) {
 			component.power(direction);
 		}
-	}
+	}*/
 
-	void powerAndUpdate(int direction) {
+	void power(int direction) {
 		if(component != null) {
 			component.power(direction);
 			// TODO - update();

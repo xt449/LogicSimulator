@@ -40,7 +40,7 @@ public class InverterComponent extends GridComponent implements Directional {
 		if(!powered) {
 			final GridSquare forwardSquare = gridSquare.getRelativeGridSquare(direction);
 			if(forwardSquare != null) {
-				forwardSquare.powerAndUpdate(Direction.getDirectionReversed(direction));
+				forwardSquare.power(Direction.getDirectionReversed(direction));
 			}
 		}
 	}
