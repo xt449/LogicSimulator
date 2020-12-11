@@ -104,4 +104,64 @@ public class Texture {
 			INVERTER_LEFT_POWERED,
 			INVERTER_RIGHT_POWERED,
 	};
+
+	static Texture getWire(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return WIRE_UP;
+			case Direction.DOWN:
+				return WIRE_DOWN;
+			case Direction.LEFT:
+				return WIRE_LEFT;
+			case Direction.RIGHT:
+				return WIRE_RIGHT;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getPoweredWire(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return WIRE_UP_POWERED;
+			case Direction.DOWN:
+				return WIRE_DOWN_POWERED;
+			case Direction.LEFT:
+				return WIRE_LEFT_POWERED;
+			case Direction.RIGHT:
+				return WIRE_RIGHT_POWERED;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getInverter(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return INVERTER_UP;
+			case Direction.DOWN:
+				return INVERTER_DOWN;
+			case Direction.LEFT:
+				return INVERTER_LEFT;
+			case Direction.RIGHT:
+				return INVERTER_RIGHT;
+			default:
+				return null;
+		}
+	}
+
+	static Texture getPoweredInverter(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return INVERTER_UP_POWERED;
+			case Direction.DOWN:
+				return INVERTER_DOWN_POWERED;
+			case Direction.LEFT:
+				return INVERTER_LEFT_POWERED;
+			case Direction.RIGHT:
+				return INVERTER_RIGHT_POWERED;
+			default:
+				return null;
+		}
+	}
 }

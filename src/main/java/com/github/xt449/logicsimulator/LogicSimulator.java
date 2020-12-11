@@ -2,6 +2,7 @@ package com.github.xt449.logicsimulator;
 
 import org.joml.Matrix4f;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -20,6 +21,22 @@ public final class LogicSimulator extends GLFWManager {
 	static final int GRID_WIDTH = 40;
 	static final int GRID_HEIGHT = 20;
 	static GridSquare[][] grid = new GridSquare[GRID_WIDTH][GRID_HEIGHT];
+
+	static GridSquare getGridSquare(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
+		}
+
+		return LogicSimulator.grid[x][y];
+	}
+
+	static GridComponent getGridComponent(int x, int y) {
+		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+			return null;
+		}
+
+		return LogicSimulator.grid[x][y].component;
+	}
 
 	private static Texture currentTexture;
 
@@ -106,12 +123,11 @@ public final class LogicSimulator extends GLFWManager {
 
 		grid[3][0].component = new WireComponent();
 
-		// Update Grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				grid[x][y].update();
-			}
-		}
+		// TODO: Debug
+		System.out.println(Direction.getDirectionReversed(Direction.UP));
+		System.out.println(Direction.getDirectionReversed(Direction.DOWN));
+		System.out.println(Direction.getDirectionReversed(Direction.LEFT));
+		System.out.println(Direction.getDirectionReversed(Direction.RIGHT));
 
 		// Loop
 		loop();
@@ -135,11 +151,21 @@ public final class LogicSimulator extends GLFWManager {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+			tick();
+
 			render();
 
 			swapBuffers();
 			pollEvents();
 		} while(!shouldClose());
+	}
+
+	private void tick() {
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				grid[x][y].tick();
+			}
+		}
 	}
 
 	private void render() {
@@ -164,7 +190,6 @@ public final class LogicSimulator extends GLFWManager {
 
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
-				grid[x][y].update();
 				grid[x][y].render();
 			}
 		}
@@ -305,23 +330,29 @@ public final class LogicSimulator extends GLFWManager {
 
 	@Override
 	void mouseButtonCallback(long window, int button, int action, int mods) {
-		if(action != 0) {
-			return;
-		}
 
+		//if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
-		int x = (int) cursorX / 32;
-		int y = (int) cursorY / 32;
-		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
-			return;
-		}
+		final GridSquare target = getGridSquare((int) cursorX / 32, (int) cursorY / 32);
 
-		final GridSquare target = LogicSimulator.grid[x][y];
-		if(target.component == null) {
-			target.component = new WireComponent();
-		} else if(target.component instanceof WireComponent) {
-			target.component = null;
+		if(GLFW.glfwGetMouseButton(window, 0) == 1) {
+			if(target != null) {
+				if(target.component == null) {
+					target.component = new WireComponent();
+				} else if(target.component instanceof WireComponent) {
+					target.component = new InverterComponent();
+				} else if(target.component instanceof InverterComponent) {
+					target.component = null;
+				}
+			}
+		} else if(GLFW.glfwGetMouseButton(window, 1) == 1) {
+			if(target != null) {
+				if(target.component instanceof Directional) {
+					((Directional) target.component).rotate();
+				}
+			}
 		}
+		//}
 	}
 }

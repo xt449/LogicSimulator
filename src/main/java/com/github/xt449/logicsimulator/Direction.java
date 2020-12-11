@@ -30,6 +30,10 @@ public class Direction {
 	}
 
 	public static int getDirectionReversed(int direction) {
-		return (direction + 1) % 2;
+		return (direction + 1) % 2 + (direction > 1 ? 2 : 0);
+	}
+
+	public static int[] getEach() {
+		return new int[] {UP, DOWN, LEFT, RIGHT};
 	}
 }
