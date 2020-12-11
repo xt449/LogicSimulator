@@ -108,28 +108,6 @@ public final class LogicSimulator extends GLFWManager {
 			}
 		}
 
-		// Exmaple Grid
-//		grid[0][0].component = new WireComponent();
-//		grid[0][1].component = new WireComponent();
-//		grid[1][0].component = new WireComponent();
-//		grid[1][1].component = new WireComponent();
-//		grid[0][0].component.powered = true;
-//		grid[1][0].component.powered = true;
-
-		/*grid[0][0].component = new InverterComponent(Direction.RIGHT);
-		grid[0][1].component = new InverterComponent(Direction.RIGHT);
-		grid[0][2].component = new InverterComponent(Direction.RIGHT);
-		grid[0][3].component = new InverterComponent(Direction.RIGHT);
-
-		grid[1][0].component = new WireComponent();
-		grid[1][1].component = new WireComponent();
-		grid[1][2].component = new WireComponent();
-		grid[1][3].component = new WireComponent();
-
-		grid[2][0].component = new InverterComponent(Direction.RIGHT);
-
-		grid[3][0].component = new WireComponent();*/
-
 		// Loop
 		loop();
 
@@ -148,16 +126,11 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
-	//int tickClock = 0;
-
 	private void loop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			//if(tickClock++ == 20) {
-				tick();
-			//	tickClock = 0;
-			//}
+			tick();
 
 			render();
 
@@ -255,8 +228,7 @@ public final class LogicSimulator extends GLFWManager {
 
 	@Override
 	void mouseButtonCallback(long window, int button, int action, int mods) {
-
-		//if(action == GLFW.GLFW_PRESS) {
+//		if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
 		final GridSquare target = getGridSquare((int) cursorX / 32, (int) cursorY / 32);
@@ -280,6 +252,6 @@ public final class LogicSimulator extends GLFWManager {
 				}
 			}
 		}
-		//}
+//		}
 	}
 }

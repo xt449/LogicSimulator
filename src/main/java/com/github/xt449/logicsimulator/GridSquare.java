@@ -15,18 +15,10 @@ public class GridSquare {
 		this.y = y;
 	}
 
-	/*public void update() {
-		if(component != null) {
-			// TODO
-		}
-	}*/
-
 	public void tick() {
 		if(component != null) {
 			component.tick(this);
 		}
-
-		// TODO - update();
 	}
 
 	public void render() {
@@ -86,17 +78,4 @@ public class GridSquare {
 
 		return LogicSimulator.getGridComponent(x, y);
 	}
-
-	/*void powerExtra(int direction) {
-		if(component != null) {
-			component.power(direction);
-		}
-	}*/
-
-//	void power(int direction) {
-//		if(component != null) {
-//			component.power(direction);
-//			// TODO - update();
-//		}
-//	}
 }

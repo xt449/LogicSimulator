@@ -7,10 +7,6 @@ public abstract class GridComponent {
 
 	protected boolean powered = false;
 
-	/*protected void setPowered(boolean powered) {
-		this.powered = powered;
-	}*/
-
 	abstract boolean isPowering(int direction);
 
 	abstract boolean acceptsWireFrom(int direction);
