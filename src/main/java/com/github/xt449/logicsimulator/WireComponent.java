@@ -35,19 +35,86 @@ public class WireComponent extends GridComponent {
 			}
 		}
 
-//		if(powered) {
-//			for(int direction = 0; direction < 4; direction++) {
-//				if(direction == poweredFromDirection) {
-//					continue;
-//				}
-//				final GridSquare square = gridSquare.getRelativeGridSquare(direction);
-//				if(square != null) {
-//					if(square.component != null) {
-//						square.power(Direction.getDirectionReversed(direction));
-//					}
-//				}
-//			}
-//		}
+		if(powered) {
+			final GridSquare squareUp = gridSquare.getRelativeGridSquare(Direction.UP);
+			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
+			if(squareUp != null) {
+				if(squareUp.component != null) {
+					if(!squareUp.component.powered || !squareUp.component.isPowering(Direction.DOWN)) {
+						squareUp.component.tick(squareUp);
+					}
+				}
+			}
+			final GridSquare squareDown = gridSquare.getRelativeGridSquare(Direction.DOWN);
+			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
+			if(squareDown != null) {
+				if(squareDown.component != null) {
+					if(!squareDown.component.powered || !squareDown.component.isPowering(Direction.UP)) {
+						squareDown.component.tick(squareDown);
+					}
+				}
+			}
+
+			final GridSquare squareLeft = gridSquare.getRelativeGridSquare(Direction.LEFT);
+			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
+			if(squareLeft != null) {
+				if(squareLeft.component != null) {
+					if(!squareLeft.component.powered || !squareLeft.component.isPowering(Direction.RIGHT)) {
+						squareLeft.component.tick(squareLeft);
+					}
+				}
+			}
+
+			final GridSquare squareRight = gridSquare.getRelativeGridSquare(Direction.RIGHT);
+			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
+			if(squareRight != null) {
+				if(squareRight.component != null) {
+					if(!squareRight.component.powered || !squareRight.component.isPowering(Direction.LEFT)) {
+						squareRight.component.tick(squareRight);
+					}
+				}
+			}
+		} else {
+			final GridSquare squareUp = gridSquare.getRelativeGridSquare(Direction.UP);
+			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
+			if(squareUp != null) {
+				if(squareUp.component != null) {
+					if(squareUp.component.powered && !squareUp.component.isPowering(Direction.DOWN)) {
+						squareUp.component.tick(squareUp);
+					}
+				}
+			}
+
+			final GridSquare squareDown = gridSquare.getRelativeGridSquare(Direction.DOWN);
+			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
+			if(squareDown != null) {
+				if(squareDown.component != null) {
+					if(squareDown.component.powered && !squareDown.component.isPowering(Direction.UP)) {
+						squareDown.component.tick(squareDown);
+					}
+				}
+			}
+
+			final GridSquare squareLeft = gridSquare.getRelativeGridSquare(Direction.LEFT);
+			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
+			if(squareLeft != null) {
+				if(squareLeft.component != null) {
+					if(squareLeft.component.powered && !squareLeft.component.isPowering(Direction.RIGHT)) {
+						squareLeft.component.tick(squareLeft);
+					}
+				}
+			}
+
+			final GridSquare squareRight = gridSquare.getRelativeGridSquare(Direction.RIGHT);
+			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
+			if(squareRight != null) {
+				if(squareRight.component != null) {
+					if(squareRight.component.powered && !squareRight.component.isPowering(Direction.LEFT)) {
+						squareRight.component.tick(squareRight);
+					}
+				}
+			}
+		}
 	}
 
 	@Override

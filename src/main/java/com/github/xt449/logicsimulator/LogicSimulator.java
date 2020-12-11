@@ -126,11 +126,19 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
+	//	private int tickClock;
+	private boolean paused;
+
 	private void loop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			tick();
+			if(!paused) {
+//				if(tickClock++ == 10) {
+				tick();
+//					tickClock = 0;
+//				}
+			}
 
 			render();
 
@@ -223,7 +231,9 @@ public final class LogicSimulator extends GLFWManager {
 
 	@Override
 	void keyCallback(long window, int key, int scancode, int action, int mods) {
-
+		if(key == GLFW.GLFW_KEY_P && action == 1) {
+			paused = !paused;
+		}
 	}
 
 	@Override
