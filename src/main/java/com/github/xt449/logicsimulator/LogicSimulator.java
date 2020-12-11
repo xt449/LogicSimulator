@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
+ * All Rights Reserved
  */
 public final class LogicSimulator extends GLFWManager {
 

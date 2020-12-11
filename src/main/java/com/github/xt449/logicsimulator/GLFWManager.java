@@ -10,6 +10,7 @@ import java.nio.IntBuffer;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
+ * All Rights Reserved
  */
 abstract class GLFWManager {
 

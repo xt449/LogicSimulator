@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
+ * All Rights Reserved
  */
 abstract class ResourceLoader {
 
