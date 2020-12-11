@@ -109,12 +109,12 @@ public final class LogicSimulator extends GLFWManager {
 		}
 
 		// Exmaple Grid
-		grid[0][0].component = new WireComponent();
-		grid[0][1].component = new WireComponent();
-		grid[1][0].component = new WireComponent();
-		grid[1][1].component = new WireComponent();
-		grid[0][0].component.powered = true;
-		grid[1][0].component.powered = true;
+//		grid[0][0].component = new WireComponent();
+//		grid[0][1].component = new WireComponent();
+//		grid[1][0].component = new WireComponent();
+//		grid[1][1].component = new WireComponent();
+//		grid[0][0].component.powered = true;
+//		grid[1][0].component.powered = true;
 
 		/*grid[0][0].component = new InverterComponent(Direction.RIGHT);
 		grid[0][1].component = new InverterComponent(Direction.RIGHT);
@@ -148,11 +148,16 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
+	//int tickClock = 0;
+
 	private void loop() {
 		do {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-			tick();
+			//if(tickClock++ == 20) {
+				tick();
+			//	tickClock = 0;
+			//}
 
 			render();
 
@@ -170,6 +175,7 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	private void render() {
+		// Prepare to draw entire grid
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, new float[] {
 				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
@@ -184,98 +190,16 @@ public final class LogicSimulator extends GLFWManager {
 		prepareDrawTexture(Texture.CELL);
 		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
 
+		// Prepare to draw normal single cell textures
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
-		//
-
+		// Render components on grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
 				grid[x][y].render();
 			}
 		}
-
-		//
-
-		/*prepareDrawTexture(Texture.WIRE_CENTER);
-		drawTextureGridPosition(3, 0);
-
-		prepareDrawTexture(Texture.WIRE_UP);
-
-		prepareDrawTexture(Texture.WIRE_DOWN);
-
-		prepareDrawTexture(Texture.WIRE_LEFT);
-		drawTextureGridPosition(0, 0);
-		drawTextureGridPosition(0, 1);
-		drawTextureGridPosition(0, 2);
-		drawTextureGridPosition(0, 3);
-		drawTextureGridPosition(3, 0);
-
-		prepareDrawTexture(Texture.WIRE_RIGHT);
-		drawTextureGridPosition(2, 0);
-
-		//
-
-		prepareDrawTexture(Texture.WIRE_CENTER_POWERED);
-		drawTextureGridPosition(1, 0);
-		drawTextureGridPosition(1, 1);
-		drawTextureGridPosition(1, 2);
-		drawTextureGridPosition(1, 3);
-
-		prepareDrawTexture(Texture.WIRE_UP_POWERED);
-		drawTextureGridPosition(1, 1);
-		drawTextureGridPosition(1, 2);
-		drawTextureGridPosition(1, 3);
-
-		prepareDrawTexture(Texture.WIRE_DOWN_POWERED);
-		drawTextureGridPosition(1, 0);
-		drawTextureGridPosition(1, 1);
-		drawTextureGridPosition(1, 2);
-
-		prepareDrawTexture(Texture.WIRE_LEFT_POWERED);
-		drawTextureGridPosition(1, 0);
-		drawTextureGridPosition(1, 1);
-		drawTextureGridPosition(1, 2);
-		drawTextureGridPosition(1, 3);
-		drawTextureGridPosition(2, 0);
-
-		prepareDrawTexture(Texture.WIRE_RIGHT_POWERED);
-		drawTextureGridPosition(0, 0);
-		drawTextureGridPosition(0, 1);
-		drawTextureGridPosition(0, 2);
-		drawTextureGridPosition(0, 3);
-		drawTextureGridPosition(1, 0);
-
-		//
-
-		prepareDrawTexture(Texture.INVERTER_UP);
-
-		prepareDrawTexture(Texture.INVERTER_DOWN);
-
-		prepareDrawTexture(Texture.INVERTER_LEFT);
-
-		prepareDrawTexture(Texture.INVERTER_RIGHT);
-		drawTextureGridPosition(0, 0);
-		drawTextureGridPosition(0, 1);
-		drawTextureGridPosition(0, 2);
-		drawTextureGridPosition(0, 3);
-
-		//
-
-		prepareDrawTexture(Texture.INVERTER_UP_POWERED);
-
-		prepareDrawTexture(Texture.INVERTER_DOWN_POWERED);
-
-		prepareDrawTexture(Texture.INVERTER_LEFT_POWERED);
-
-		prepareDrawTexture(Texture.INVERTER_RIGHT_POWERED);
-		drawTextureGridPosition(2, 0);*/
-
-		//
-
-		// TODO - Debug
-//      prepareDrawTexture(Texture.WIRE_CENTER_POWERED);
-//      drawTextureRatioPosition(0.5F, 0.5F);
 	}
 
 	void prepareDrawTexture(Texture texture) {
@@ -344,6 +268,8 @@ public final class LogicSimulator extends GLFWManager {
 				} else if(target.component instanceof WireComponent) {
 					target.component = new InverterComponent();
 				} else if(target.component instanceof InverterComponent) {
+					target.component = new DiodeComponent();
+				} else if(target.component instanceof DiodeComponent) {
 					target.component = null;
 				}
 			}

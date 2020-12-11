@@ -93,10 +93,10 @@ public class GridSquare {
 		}
 	}*/
 
-	void power(int direction) {
-		if(component != null) {
-			component.power(direction);
-			// TODO - update();
-		}
-	}
+//	void power(int direction) {
+//		if(component != null) {
+//			component.power(direction);
+//			// TODO - update();
+//		}
+//	}
 }

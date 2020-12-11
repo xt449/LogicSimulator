@@ -5,13 +5,15 @@ package com.github.xt449.logicsimulator;
  */
 public abstract class GridComponent {
 
-	boolean powered = false;
+	protected boolean powered = false;
 
-	boolean redirectsWireFrom(int direction) {
-		return false;
-	}
+	/*protected void setPowered(boolean powered) {
+		this.powered = powered;
+	}*/
 
-	abstract void power(int direction);
+	abstract boolean isPowering(int direction);
+
+	abstract boolean acceptsWireFrom(int direction);
 
 	abstract void tick(GridSquare gridSquare);
 

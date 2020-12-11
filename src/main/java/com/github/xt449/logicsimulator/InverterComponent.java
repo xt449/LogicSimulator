@@ -14,34 +14,40 @@ public class InverterComponent extends DiodeComponent {
 	}
 
 	@Override
+	boolean isPowering(int direction) {
+		return direction == this.direction && !powered;
+	}
+
+	@Override
 	void tick(GridSquare gridSquare) {
-		if(powered) {
-			final GridSquare backwardSquare = gridSquare.getRelativeGridSquare(Direction.getDirectionReversed(direction));
-			if(backwardSquare == null || backwardSquare.component == null || !backwardSquare.component.powered) {
-				powered = false;
-				return;
+		powered = false;
+
+		final GridComponent component = gridSquare.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		if(component != null) {
+			if(component.isPowering(direction)) {
+				powered = true;
 			}
 		}
 
-		if(!powered) {
-			final GridSquare forwardSquare = gridSquare.getRelativeGridSquare(direction);
-			if(forwardSquare != null) {
-				forwardSquare.power(Direction.getDirectionReversed(direction));
-			}
-		}
+//		if(!powered) {
+//			final GridSquare forwardSquare = gridSquare.getRelativeGridSquare(direction);
+//			if(forwardSquare != null) {
+//				forwardSquare.power(Direction.getDirectionReversed(direction));
+//			}
+//		}
 	}
 
 	@Override
 	void render(GridSquare gridSquare) {
 		final GridComponent forwardComponent = gridSquare.getRelativeGridComponent(direction);
-		if(forwardComponent != null && forwardComponent.redirectsWireFrom(direction)) {
+		if(forwardComponent != null && forwardComponent.acceptsWireFrom(direction)) {
 			LogicSimulator.instance.prepareDrawTexture(!powered ? Texture.getPoweredWire(direction) : Texture.getWire(direction));
 			LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 		}
 
 		final int directionReversed = Direction.getDirectionReversed(direction);
 		final GridComponent backwardComponent = gridSquare.getRelativeGridComponent(directionReversed);
-		if(backwardComponent != null && backwardComponent.redirectsWireFrom(directionReversed)) {
+		if(backwardComponent != null && backwardComponent.acceptsWireFrom(directionReversed)) {
 			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredWire(directionReversed) : Texture.getWire(directionReversed));
 			LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 		}
