@@ -19,18 +19,31 @@ public class DiodeComponent extends DirectionalGridComponent {
 	}
 
 	@Override
-	boolean acceptsWireFrom(int direction) {
-		return this.direction == direction || Direction.getDirectionReversed(this.direction) == direction;
+	boolean acceptsInputFrom(int direction) {
+		return Direction.getDirectionReversed(this.direction) == direction;
 	}
 
 	@Override
+	boolean givesOutputTo(int direction) {
+		return this.direction == direction;
+	}
+
+	private boolean nextPoweredState;
+
+	@Override
 	void tick(GridSquare gridSquare) {
-		powered = false;
+		powered = nextPoweredState;
+	}
+
+	@Override
+	void update(GridSquare gridSquare) {
+		nextPoweredState = false;
+		//powered = false;
 
 		final GridComponent component = gridSquare.getRelativeGridComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isPowering(direction)) {
-				powered = true;
+				nextPoweredState = true;
 			}
 		}
 
@@ -40,6 +53,25 @@ public class DiodeComponent extends DirectionalGridComponent {
 //				forwardComponent.power(Direction.getDirectionReversed(direction));
 //			}
 //		}
+
+		final GridSquare squareForward = gridSquare.getRelativeGridSquare(direction);
+		if(nextPoweredState) {
+			if(squareForward != null) {
+				if(squareForward.component != null) {
+					if(!squareForward.component.powered || !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+						squareForward.component.update(squareForward);
+					}
+				}
+			}
+		} else {
+			if(squareForward != null) {
+				if(squareForward.component != null) {
+					if(squareForward.component.powered && !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+						squareForward.component.update(squareForward);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -49,24 +81,24 @@ public class DiodeComponent extends DirectionalGridComponent {
 		final GridComponent backwardComponent = gridSquare.getRelativeGridComponent(directionReversed);
 
 		if(powered) {
-			if(forwardComponent != null && forwardComponent.acceptsWireFrom(direction)) {
+			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
 				LogicSimulator.instance.prepareDrawTexture(Texture.getPoweredWire(direction));
 				LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 			}
 
-			if(backwardComponent != null && backwardComponent.acceptsWireFrom(directionReversed)) {
+			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
 				LogicSimulator.instance.prepareDrawTexture(Texture.getPoweredWire(directionReversed));
 				LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 			}
 
 			LogicSimulator.instance.prepareDrawTexture(Texture.getPoweredDiode(direction));
 		} else {
-			if(forwardComponent != null && forwardComponent.acceptsWireFrom(direction)) {
+			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
 				LogicSimulator.instance.prepareDrawTexture(Texture.getWire(direction));
 				LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 			}
 
-			if(backwardComponent != null && backwardComponent.acceptsWireFrom(directionReversed)) {
+			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
 				LogicSimulator.instance.prepareDrawTexture(Texture.getWire(directionReversed));
 				LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 			}

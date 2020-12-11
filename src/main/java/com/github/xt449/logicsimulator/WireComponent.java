@@ -13,12 +13,22 @@ public class WireComponent extends GridComponent {
 	}
 
 	@Override
-	boolean acceptsWireFrom(int direction) {
+	boolean acceptsInputFrom(int direction) {
+		return true;
+	}
+
+	@Override
+	boolean givesOutputTo(int direction) {
 		return true;
 	}
 
 	@Override
 	void tick(GridSquare gridSquare) {
+		// Updates mid-tick through update
+	}
+
+	@Override
+	void update(GridSquare gridSquare) {
 		powered = false;
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
@@ -35,82 +45,74 @@ public class WireComponent extends GridComponent {
 			}
 		}
 
+		final GridSquare squareUp = gridSquare.getRelativeGridSquare(Direction.UP);
+		final GridSquare squareDown = gridSquare.getRelativeGridSquare(Direction.DOWN);
+		final GridSquare squareLeft = gridSquare.getRelativeGridSquare(Direction.LEFT);
+		final GridSquare squareRight = gridSquare.getRelativeGridSquare(Direction.RIGHT);
 		if(powered) {
-			final GridSquare squareUp = gridSquare.getRelativeGridSquare(Direction.UP);
-			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
 			if(squareUp != null) {
 				if(squareUp.component != null) {
-					if(!squareUp.component.powered || !squareUp.component.isPowering(Direction.DOWN)) {
-						squareUp.component.tick(squareUp);
+					//if(!squareUp.component.powered || !squareUp.component.isPowering(Direction.DOWN)) {
+					if(!squareUp.component.powered && squareUp.component.acceptsInputFrom(Direction.DOWN)) {
+						squareUp.component.update(squareUp);
 					}
 				}
 			}
-			final GridSquare squareDown = gridSquare.getRelativeGridSquare(Direction.DOWN);
-			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
 			if(squareDown != null) {
 				if(squareDown.component != null) {
-					if(!squareDown.component.powered || !squareDown.component.isPowering(Direction.UP)) {
-						squareDown.component.tick(squareDown);
+					//if(!squareDown.component.powered || !squareDown.component.isPowering(Direction.UP)) {
+					if(!squareDown.component.powered && squareDown.component.acceptsInputFrom(Direction.UP)) {
+						squareDown.component.update(squareDown);
 					}
 				}
 			}
 
-			final GridSquare squareLeft = gridSquare.getRelativeGridSquare(Direction.LEFT);
-			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
 			if(squareLeft != null) {
 				if(squareLeft.component != null) {
-					if(!squareLeft.component.powered || !squareLeft.component.isPowering(Direction.RIGHT)) {
-						squareLeft.component.tick(squareLeft);
+					//if(!squareLeft.component.powered || !squareLeft.component.isPowering(Direction.RIGHT)) {
+					if(!squareLeft.component.powered && squareLeft.component.acceptsInputFrom(Direction.RIGHT)) {
+						squareLeft.component.update(squareLeft);
 					}
 				}
 			}
 
-			final GridSquare squareRight = gridSquare.getRelativeGridSquare(Direction.RIGHT);
-			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
 			if(squareRight != null) {
 				if(squareRight.component != null) {
-					if(!squareRight.component.powered || !squareRight.component.isPowering(Direction.LEFT)) {
-						squareRight.component.tick(squareRight);
+					//if(!squareRight.component.powered || !squareRight.component.isPowering(Direction.LEFT)) {
+					if(!squareRight.component.powered && squareRight.component.acceptsInputFrom(Direction.LEFT)) {
+						squareRight.component.update(squareRight);
 					}
 				}
 			}
 		} else {
-			final GridSquare squareUp = gridSquare.getRelativeGridSquare(Direction.UP);
-			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
 			if(squareUp != null) {
 				if(squareUp.component != null) {
-					if(squareUp.component.powered && !squareUp.component.isPowering(Direction.DOWN)) {
-						squareUp.component.tick(squareUp);
+					if(squareUp.component.powered && squareUp.component.acceptsInputFrom(Direction.DOWN)) {
+						squareUp.component.update(squareUp);
 					}
 				}
 			}
 
-			final GridSquare squareDown = gridSquare.getRelativeGridSquare(Direction.DOWN);
-			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
 			if(squareDown != null) {
 				if(squareDown.component != null) {
-					if(squareDown.component.powered && !squareDown.component.isPowering(Direction.UP)) {
-						squareDown.component.tick(squareDown);
+					if(squareDown.component.powered && squareDown.component.acceptsInputFrom(Direction.UP)) {
+						squareDown.component.update(squareDown);
 					}
 				}
 			}
 
-			final GridSquare squareLeft = gridSquare.getRelativeGridSquare(Direction.LEFT);
-			//final GridComponent componentRight = gridSquare.getRelativeGridComponent(Direction.RIGHT);
 			if(squareLeft != null) {
 				if(squareLeft.component != null) {
-					if(squareLeft.component.powered && !squareLeft.component.isPowering(Direction.RIGHT)) {
-						squareLeft.component.tick(squareLeft);
+					if(squareLeft.component.powered && squareLeft.component.acceptsInputFrom(Direction.RIGHT)) {
+						squareLeft.component.update(squareLeft);
 					}
 				}
 			}
 
-			final GridSquare squareRight = gridSquare.getRelativeGridSquare(Direction.RIGHT);
-			//final GridComponent componentDown = gridSquare.getRelativeGridComponent(Direction.DOWN);
 			if(squareRight != null) {
 				if(squareRight.component != null) {
-					if(squareRight.component.powered && !squareRight.component.isPowering(Direction.LEFT)) {
-						squareRight.component.tick(squareRight);
+					if(squareRight.component.powered && squareRight.component.acceptsInputFrom(Direction.LEFT)) {
+						squareRight.component.update(squareRight);
 					}
 				}
 			}
@@ -122,7 +124,7 @@ public class WireComponent extends GridComponent {
 		for(int direction = 0; direction < 4; direction++) {
 			final GridComponent component = gridSquare.getRelativeGridComponent(direction);
 			if(component != null) {
-				if(component.acceptsWireFrom(Direction.getDirectionReversed(direction))) {
+				if(component.hasIO(Direction.getDirectionReversed(direction))) {
 					LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredWire(direction) : Texture.getWire(direction));
 					LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 				}

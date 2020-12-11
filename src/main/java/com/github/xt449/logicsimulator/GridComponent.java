@@ -9,9 +9,17 @@ public abstract class GridComponent {
 
 	abstract boolean isPowering(int direction);
 
-	abstract boolean acceptsWireFrom(int direction);
+	abstract boolean acceptsInputFrom(int direction);
+
+	abstract boolean givesOutputTo(int direction);
+
+	boolean hasIO(int direction) {
+		return acceptsInputFrom(direction) || givesOutputTo(direction);
+	}
 
 	abstract void tick(GridSquare gridSquare);
+
+	abstract void update(GridSquare gridSquare);
 
 	abstract void render(GridSquare gridSquare);
 }

@@ -18,6 +18,7 @@ public class GridSquare {
 	public void tick() {
 		if(component != null) {
 			component.tick(this);
+			component.update(this);
 		}
 	}
 

@@ -18,14 +18,22 @@ public class InverterComponent extends DiodeComponent {
 		return direction == this.direction && !powered;
 	}
 
+	private boolean nextPoweredState;
+
 	@Override
 	void tick(GridSquare gridSquare) {
-		powered = false;
+		powered = nextPoweredState;
+	}
+
+	@Override
+	void update(GridSquare gridSquare) {
+		nextPoweredState = false;
+		//powered = false;
 
 		final GridComponent component = gridSquare.getRelativeGridComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isPowering(direction)) {
-				powered = true;
+				nextPoweredState = true;
 			}
 		}
 
@@ -35,19 +43,38 @@ public class InverterComponent extends DiodeComponent {
 //				forwardSquare.power(Direction.getDirectionReversed(direction));
 //			}
 //		}
+
+		final GridSquare squareForward = gridSquare.getRelativeGridSquare(direction);
+		if(nextPoweredState) {
+			if(squareForward != null) {
+				if(squareForward.component != null) {
+					if(squareForward.component.powered && !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+						squareForward.component.update(squareForward);
+					}
+				}
+			}
+		} else {
+			if(squareForward != null) {
+				if(squareForward.component != null) {
+					if(!squareForward.component.powered || !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+						squareForward.component.update(squareForward);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
 	void render(GridSquare gridSquare) {
 		final GridComponent forwardComponent = gridSquare.getRelativeGridComponent(direction);
-		if(forwardComponent != null && forwardComponent.acceptsWireFrom(direction)) {
+		if(forwardComponent != null && forwardComponent.hasIO(direction)) {
 			LogicSimulator.instance.prepareDrawTexture(!powered ? Texture.getPoweredWire(direction) : Texture.getWire(direction));
 			LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 		}
 
 		final int directionReversed = Direction.getDirectionReversed(direction);
 		final GridComponent backwardComponent = gridSquare.getRelativeGridComponent(directionReversed);
-		if(backwardComponent != null && backwardComponent.acceptsWireFrom(directionReversed)) {
+		if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
 			LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredWire(directionReversed) : Texture.getWire(directionReversed));
 			LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
 		}
