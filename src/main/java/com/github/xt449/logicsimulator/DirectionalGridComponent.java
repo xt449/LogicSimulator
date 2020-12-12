@@ -4,7 +4,7 @@ package com.github.xt449.logicsimulator;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public abstract class DirectionalGridComponent extends GridComponent implements Directional {
+public abstract class DirectionalGridComponent extends GridComponent implements DirectionalComponent {
 
 	protected int direction;
 

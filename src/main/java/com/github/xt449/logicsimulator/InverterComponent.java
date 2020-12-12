@@ -29,7 +29,6 @@ public class InverterComponent extends DiodeComponent {
 	@Override
 	void update(GridSquare gridSquare) {
 		nextPoweredState = false;
-		//powered = false;
 
 		final GridComponent component = gridSquare.getRelativeGridComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
@@ -38,18 +37,11 @@ public class InverterComponent extends DiodeComponent {
 			}
 		}
 
-//		if(!powered) {
-//			final GridSquare forwardSquare = gridSquare.getRelativeGridSquare(direction);
-//			if(forwardSquare != null) {
-//				forwardSquare.power(Direction.getDirectionReversed(direction));
-//			}
-//		}
-
 		final GridSquare squareForward = gridSquare.getRelativeGridSquare(direction);
-		if(nextPoweredState) {
+		if(powered) {
 			if(squareForward != null) {
 				if(squareForward.component != null) {
-					if(squareForward.component.powered && !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+					if(squareForward.component.powered && squareForward.component.acceptsInputFrom(Direction.getDirectionReversed(direction))) {
 						squareForward.component.update(squareForward);
 					}
 				}
@@ -57,7 +49,7 @@ public class InverterComponent extends DiodeComponent {
 		} else {
 			if(squareForward != null) {
 				if(squareForward.component != null) {
-					if(!squareForward.component.powered || !squareForward.component.isPowering(Direction.getDirectionReversed(direction))) {
+					if(!squareForward.component.powered && squareForward.component.acceptsInputFrom(Direction.getDirectionReversed(direction))) {
 						squareForward.component.update(squareForward);
 					}
 				}

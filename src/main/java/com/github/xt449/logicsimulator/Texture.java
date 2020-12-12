@@ -148,6 +148,11 @@ public class Texture {
 			ARROW_RIGHT,
 	};
 
+	// Switches
+
+	static final Texture SWITCH_OFF = new Texture("switch_off.png");
+	static final Texture SWITCH_ON = new Texture("switch_on.png");
+
 	static Texture getWire(int direction) {
 		switch(direction) {
 			case Direction.UP:

@@ -135,7 +135,7 @@ public final class LogicSimulator extends GLFWManager {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
 			if(!paused) {
-//				if(tickClock++ == 10) {
+//				if(tickClock++ == 100) {
 				tick();
 //					tickClock = 0;
 //				}
@@ -253,13 +253,15 @@ public final class LogicSimulator extends GLFWManager {
 				} else if(target.component instanceof InverterComponent) {
 					target.component = new DiodeComponent();
 				} else if(target.component instanceof DiodeComponent) {
+					target.component = new SwitchComponent();
+				} else if(target.component instanceof SwitchComponent) {
 					target.component = null;
 				}
 			}
 		} else if(GLFW.glfwGetMouseButton(window, 1) == 1) {
 			if(target != null) {
-				if(target.component instanceof Directional) {
-					((Directional) target.component).rotate();
+				if(target.component instanceof InteractableComponent) {
+					((InteractableComponent) target.component).interact();
 				}
 			}
 		}
