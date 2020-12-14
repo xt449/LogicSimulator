@@ -1,25 +1,38 @@
 package com.github.xt449.logicsimulator;
 
+import java.util.Objects;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public class GridSquare {
+public class GridComponentContainer {
 
 	final int x;
 	final int y;
 
 	GridComponent component = null;
 
-	public GridSquare(int x, int y) {
+	public GridComponentContainer(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/*public void preTick() {
+		if(component != null) {
+			component.tick(this);
+		}
+	}*/
+
 	public void tick() {
 		if(component != null) {
 			component.tick(this);
-			component.update(this);
+		}
+	}
+
+	public void updateState() {
+		if(component instanceof DelayedComponent) {
+			((DelayedComponent) component).updateState(this);
 		}
 	}
 
@@ -29,7 +42,7 @@ public class GridSquare {
 		}
 	}
 
-	public GridSquare getRelativeGridSquare(int direction) {
+	public GridComponentContainer getRelativeGridSquare(int direction) {
 		int x = this.x;
 		int y = this.y;
 
@@ -52,7 +65,7 @@ public class GridSquare {
 			}
 		}
 
-		return LogicSimulator.getGridSquare(x, y);
+		return LogicSimulator.instance.getComponentContainerAt(x, y);
 	}
 
 	public GridComponent getRelativeGridComponent(int direction) {
@@ -78,6 +91,19 @@ public class GridSquare {
 			}
 		}
 
-		return LogicSimulator.getGridComponent(x, y);
+		return LogicSimulator.instance.getComponentAt(x, y);
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if(this == other) return true;
+		if(other == null || getClass() != other.getClass()) return false;
+		GridComponentContainer square = (GridComponentContainer) other;
+		return x == square.x && y == square.y;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 }

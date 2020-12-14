@@ -19,24 +19,24 @@ public final class LogicSimulator extends GLFWManager {
 
 	static LogicSimulator instance;
 
-	static final int GRID_WIDTH = 40;
-	static final int GRID_HEIGHT = 20;
-	static GridSquare[][] grid = new GridSquare[GRID_WIDTH][GRID_HEIGHT];
+	private static final int GRID_WIDTH = 40;
+	private static final int GRID_HEIGHT = 20;
+	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
 
-	static GridSquare getGridSquare(int x, int y) {
+	GridComponentContainer getComponentContainerAt(int x, int y) {
 		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
 			return null;
 		}
 
-		return LogicSimulator.grid[x][y];
+		return containerGrid[x][y];
 	}
 
-	static GridComponent getGridComponent(int x, int y) {
+	GridComponent getComponentAt(int x, int y) {
 		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
 			return null;
 		}
 
-		return LogicSimulator.grid[x][y].component;
+		return containerGrid[x][y].component;
 	}
 
 	private static Texture currentTexture;
@@ -105,7 +105,7 @@ public final class LogicSimulator extends GLFWManager {
 		// Populate Grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
-				grid[x][y] = new GridSquare(x, y);
+				containerGrid[x][y] = new GridComponentContainer(x, y);
 			}
 		}
 
@@ -127,7 +127,7 @@ public final class LogicSimulator extends GLFWManager {
 			1.0F, 0.0F, 1.0F, 0.0F,
 	};
 
-	//	private int tickClock;
+	private int tickClock;
 	private boolean paused;
 
 	private void loop() {
@@ -135,10 +135,10 @@ public final class LogicSimulator extends GLFWManager {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
 			if(!paused) {
-//				if(tickClock++ == 100) {
-				tick();
-//					tickClock = 0;
-//				}
+				if(++tickClock == 6) {
+					tick();
+					tickClock = 0;
+				}
 			}
 
 			render();
@@ -151,7 +151,12 @@ public final class LogicSimulator extends GLFWManager {
 	private void tick() {
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
-				grid[x][y].tick();
+				containerGrid[x][y].tick();
+			}
+		}
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				containerGrid[x][y].updateState();
 			}
 		}
 	}
@@ -179,7 +184,7 @@ public final class LogicSimulator extends GLFWManager {
 		// Render components on grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
-				grid[x][y].render();
+				containerGrid[x][y].render();
 			}
 		}
 	}
@@ -242,7 +247,7 @@ public final class LogicSimulator extends GLFWManager {
 //		if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
-		final GridSquare target = getGridSquare((int) cursorX / 32, (int) cursorY / 32);
+		final GridComponentContainer target = getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
 
 		if(GLFW.glfwGetMouseButton(window, 0) == 1) {
 			if(target != null) {
@@ -255,6 +260,8 @@ public final class LogicSimulator extends GLFWManager {
 				} else if(target.component instanceof DiodeComponent) {
 					target.component = new SwitchComponent();
 				} else if(target.component instanceof SwitchComponent) {
+					target.component = new BridgeComponent();
+				} else if(target.component instanceof BridgeComponent) {
 					target.component = null;
 				}
 			}

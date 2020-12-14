@@ -2,22 +2,19 @@ package com.github.xt449.logicsimulator;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
- * All Rights Reserved
  */
-public class WireComponent implements InstantComponent {
-
-	private boolean powered;
+public class BridgeComponent implements InstantComponent {
 
 	private final boolean[] poweredFrom = new boolean[4];
 
 	@Override
 	public boolean isReceivingPower(int direction) {
-		return poweredFrom[direction];
+		return poweredFrom[direction] || poweredFrom[Direction.getDirectionReversed(direction)];
 	}
 
 	@Override
 	public boolean isSendingPower(int direction) {
-		return powered && !poweredFrom[direction];
+		return poweredFrom[Direction.getDirectionReversed(direction)] && !poweredFrom[direction];
 	}
 
 	@Override
@@ -32,7 +29,6 @@ public class WireComponent implements InstantComponent {
 
 	@Override
 	public void tick(GridComponentContainer container) {
-		powered = false;
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
 		poweredFrom[2] = false;
@@ -43,12 +39,12 @@ public class WireComponent implements InstantComponent {
 			if(otherContainer != null) {
 				if(otherContainer.component != null) {
 					if(otherContainer.component.isSendingPower(Direction.getDirectionReversed(direction))) {
-						powered = true;
 						poweredFrom[direction] = true;
 
-						/*if(square.component instanceof InstantComponent) {
-							((InstantComponent) square.component).backtrack(square);
-						}*/
+//						if(otherContainer.component instanceof InstantComponent) {
+//							otherContainer.component.tick(otherContainer);
+//							//return;
+//						}
 					}
 				}
 			}
@@ -59,114 +55,84 @@ public class WireComponent implements InstantComponent {
 		final GridComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
 		final GridComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
 
-		if(powered) {
+
+//		if(isSendingPower(Direction.UP)) {
+//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.UP);
 			if(containerUp != null) {
 				if(containerUp.component instanceof InstantComponent) {
 					if(containerUp.component.hasInputFrom(Direction.DOWN)) {
-						if(!containerUp.component.isSendingPower(Direction.DOWN)) {
+						if(isSendingPower(Direction.UP)) {
 							if(!containerUp.component.isReceivingPower(Direction.DOWN)) {
+								containerUp.component.tick(containerUp);
+							}
+						} else {
+							if(containerUp.component.isReceivingPower(Direction.DOWN)) {
 								containerUp.component.tick(containerUp);
 							}
 						}
 					}
 				}
 			}
-
+//		}
+//		if(isSendingPower(Direction.DOWN)) {
+//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.DOWN);
 			if(containerDown != null) {
 				if(containerDown.component instanceof InstantComponent) {
 					if(containerDown.component.hasInputFrom(Direction.UP)) {
-						if(!containerDown.component.isSendingPower(Direction.UP)) {
+						if(isSendingPower(Direction.DOWN)) {
 							if(!containerDown.component.isReceivingPower(Direction.UP)) {
+								containerDown.component.tick(containerDown);
+							}
+						} else {
+							if(containerDown.component.isReceivingPower(Direction.UP)) {
 								containerDown.component.tick(containerDown);
 							}
 						}
 					}
 				}
 			}
-
+//		}
+//		if(isSendingPower(Direction.LEFT)) {
+//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.LEFT);
 			if(containerLeft != null) {
 				if(containerLeft.component instanceof InstantComponent) {
 					if(containerLeft.component.hasInputFrom(Direction.RIGHT)) {
-						if(!containerLeft.component.isSendingPower(Direction.RIGHT)) {
+						if(isSendingPower(Direction.LEFT)) {
 							if(!containerLeft.component.isReceivingPower(Direction.RIGHT)) {
+								containerLeft.component.tick(containerLeft);
+							}
+						} else {
+							if(containerLeft.component.isReceivingPower(Direction.RIGHT)) {
 								containerLeft.component.tick(containerLeft);
 							}
 						}
 					}
 				}
 			}
-
+//		}
+//		if(isSendingPower(Direction.RIGHT)) {
+//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.RIGHT);
 			if(containerRight != null) {
 				if(containerRight.component instanceof InstantComponent) {
 					if(containerRight.component.hasInputFrom(Direction.LEFT)) {
-						if(!containerRight.component.isSendingPower(Direction.LEFT)) {
+						if(isSendingPower(Direction.RIGHT)) {
 							if(!containerRight.component.isReceivingPower(Direction.LEFT)) {
+								containerRight.component.tick(containerRight);
+							}
+						} else {
+							if(containerRight.component.isReceivingPower(Direction.LEFT)) {
 								containerRight.component.tick(containerRight);
 							}
 						}
 					}
 				}
 			}
-		} else {
-			if(containerUp != null) {
-				if(containerUp.component instanceof InstantComponent) {
-					if(containerUp.component.hasInputFrom(Direction.DOWN)) {
-						//if(containerUp.component.isSendingPower(Direction.DOWN))
-						if(containerUp.component.isReceivingPower(Direction.DOWN)) {
-							containerUp.component.tick(containerUp);
-						}
-					}
-				}
-			}
-
-			if(containerDown != null) {
-				if(containerDown.component instanceof InstantComponent) {
-					if(containerDown.component.hasInputFrom(Direction.UP)) {
-						//if(containerDown.component.isSendingPower(Direction.UP))
-						if(containerDown.component.isReceivingPower(Direction.UP)) {
-							containerDown.component.tick(containerDown);
-						}
-					}
-				}
-			}
-
-			if(containerLeft != null) {
-				if(containerLeft.component instanceof InstantComponent) {
-					if(containerLeft.component.hasInputFrom(Direction.RIGHT)) {
-						//if(containerLeft.component.isSendingPower(Direction.RIGHT))
-						if(containerLeft.component.isReceivingPower(Direction.RIGHT)) {
-							containerLeft.component.tick(containerLeft);
-						}
-					}
-				}
-			}
-
-			if(containerRight != null) {
-				if(containerRight.component instanceof InstantComponent) {
-					if(containerRight.component.hasInputFrom(Direction.LEFT)) {
-						//if(containerRight.component.isSendingPower(Direction.LEFT))
-						if(containerRight.component.isReceivingPower(Direction.LEFT)) {
-							containerRight.component.tick(containerRight);
-						}
-					}
-				}
-			}
-		}
+//		}
 	}
 
 	@Override
 	public void render(GridComponentContainer container) {
-		for(int direction = 0; direction < 4; direction++) {
-			final GridComponent component = container.getRelativeGridComponent(direction);
-			if(component != null) {
-				if(component.hasIO(Direction.getDirectionReversed(direction))) {
-					LogicSimulator.instance.prepareDrawTexture(powered ? Texture.getPoweredWire(direction) : Texture.getWire(direction));
-					LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-				}
-			}
-		}
-
-		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.WIRE_CENTER_POWERED : Texture.WIRE_CENTER);
+		LogicSimulator.instance.prepareDrawTexture(Texture.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
 		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 
 		// TODO : Debug
@@ -179,13 +145,7 @@ public class WireComponent implements InstantComponent {
 	}
 
 	/*@Override
-	public void backtrack(GridSquare gridSquare, LinkedList<GridSquare> stack) {
-
-	}
-
-	@Override
 	public void backtrack(GridSquare gridSquare) {
-		powered = false;
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
 		poweredFrom[2] = false;
@@ -196,11 +156,11 @@ public class WireComponent implements InstantComponent {
 			if(square != null) {
 				if(square.component != null) {
 					if(square.component.isSendingPower(Direction.getDirectionReversed(direction))) {
-						powered = true;
 						poweredFrom[direction] = true;
 
 						if(square.component instanceof InstantComponent) {
-							((InstantComponent) square.component).backtrack(square);
+							square.component.tick(square);
+							//return;
 						}
 					}
 				}

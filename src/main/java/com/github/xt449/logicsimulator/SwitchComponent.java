@@ -4,45 +4,43 @@ package com.github.xt449.logicsimulator;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public class SwitchComponent extends GridComponent implements InteractableComponent {
+public class SwitchComponent implements GridComponent, InteractableComponent {
 
-	public SwitchComponent() {
-
-	}
+	private boolean active;
 
 	@Override
-	boolean isPowering(int direction) {
-		return powered;
-	}
-
-	@Override
-	boolean acceptsInputFrom(int direction) {
+	public boolean isReceivingPower(int direction) {
 		return false;
 	}
 
 	@Override
-	boolean givesOutputTo(int direction) {
+	public boolean isSendingPower(int direction) {
+		return active;
+	}
+
+	@Override
+	public boolean hasInputFrom(int direction) {
+		return false;
+	}
+
+	@Override
+	public boolean hasOutputTo(int direction) {
 		return true;
 	}
 
 	@Override
-	void tick(GridSquare gridSquare) {
-		// nothing to tick
-	}
-
-	@Override
-	void update(GridSquare gridSquare) {
+	public void tick(GridComponentContainer container) {
 		// nothing to update
 	}
 
 	@Override
-	void render(GridSquare gridSquare) {
-		LogicSimulator.instance.prepareDrawTexture(powered ? Texture.SWITCH_ON : Texture.SWITCH_OFF);
-		LogicSimulator.instance.drawTextureGridPosition(gridSquare.x, gridSquare.y);
+	public void render(GridComponentContainer container) {
+		LogicSimulator.instance.prepareDrawTexture(active ? Texture.SWITCH_ON : Texture.SWITCH_OFF);
+		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override
 	public void interact() {
-		powered = !powered;
+		active = !active;
 	}
 }

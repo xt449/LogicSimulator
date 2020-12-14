@@ -153,6 +153,15 @@ public class Texture {
 	static final Texture SWITCH_OFF = new Texture("switch_off.png");
 	static final Texture SWITCH_ON = new Texture("switch_on.png");
 
+	// Bridges
+
+	static final Texture BRIDGE_NONE = new Texture("bridge_none.png");
+	static final Texture BRIDGE_HORIZONTAL = new Texture("bridge_horizontal.png");
+	static final Texture BRIDGE_VERTICAL = new Texture("bridge_vertical.png");
+	static final Texture BRIDGE_BOTH = new Texture("bridge_both.png");
+
+	// Getters
+
 	static Texture getWire(int direction) {
 		switch(direction) {
 			case Direction.UP:
@@ -255,6 +264,22 @@ public class Texture {
 				return ARROW_RIGHT;
 			default:
 				return null;
+		}
+	}
+
+	static Texture getBridge(boolean horizontal, boolean vertical) {
+		if(horizontal) {
+			if(vertical) {
+				return BRIDGE_BOTH;
+			} else {
+				return BRIDGE_HORIZONTAL;
+			}
+		} else {
+			if(vertical) {
+				return BRIDGE_VERTICAL;
+			} else {
+				return BRIDGE_NONE;
+			}
 		}
 	}
 }

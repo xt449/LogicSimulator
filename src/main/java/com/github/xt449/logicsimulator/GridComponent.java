@@ -4,23 +4,23 @@ package com.github.xt449.logicsimulator;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public abstract class GridComponent {
+interface GridComponent {
 
-	protected boolean powered = false;
+	boolean isReceivingPower(int direction);
 
-	abstract boolean isPowering(int direction);
+	boolean isSendingPower(int direction);
 
-	abstract boolean acceptsInputFrom(int direction);
+	boolean hasInputFrom(int direction);
 
-	abstract boolean givesOutputTo(int direction);
+	boolean hasOutputTo(int direction);
 
-	boolean hasIO(int direction) {
-		return acceptsInputFrom(direction) || givesOutputTo(direction);
+	default boolean hasIO(int direction) {
+		return hasInputFrom(direction) || hasOutputTo(direction);
 	}
 
-	abstract void tick(GridSquare gridSquare);
+	//abstract void preTick(GridSquare gridSquare);
 
-	abstract void update(GridSquare gridSquare);
+	void tick(GridComponentContainer container);
 
-	abstract void render(GridSquare gridSquare);
+	void render(GridComponentContainer container);
 }
