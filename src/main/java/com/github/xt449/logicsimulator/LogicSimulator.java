@@ -19,12 +19,12 @@ public final class LogicSimulator extends GLFWManager {
 
 	static LogicSimulator instance;
 
-	private static final int GRID_WIDTH = 40;
-	private static final int GRID_HEIGHT = 20;
+	private final int GRID_WIDTH = 40;
+	private final int GRID_HEIGHT = 20;
 	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
 
 	GridComponentContainer getComponentContainerAt(int x, int y) {
-		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
 			return null;
 		}
 
@@ -32,14 +32,14 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	GridComponent getComponentAt(int x, int y) {
-		if(x < 0 || x >= LogicSimulator.GRID_WIDTH || y < 0 || y >= LogicSimulator.GRID_HEIGHT) {
+		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
 			return null;
 		}
 
 		return containerGrid[x][y].component;
 	}
 
-	private static Texture currentTexture;
+	private Texture currentTexture;
 
 	int orthograhpicProgram;
 	int vbo;
@@ -100,7 +100,7 @@ public final class LogicSimulator extends GLFWManager {
 		glBindVertexArray(0);
 
 		// Textures
-		Texture.init();
+		Textures.init();
 
 		// Populate Grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
@@ -174,7 +174,7 @@ public final class LogicSimulator extends GLFWManager {
 				1.0F, 0.0F, GRID_WIDTH, 0.0F,
 		}, GL_STATIC_DRAW);
 		// Draw entire grid
-		prepareDrawTexture(Texture.CELL);
+		prepareDrawTexture(Textures.CELL);
 		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
 
 		// Prepare to draw normal single cell textures
