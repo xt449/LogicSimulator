@@ -7,6 +7,7 @@ import java.util.Collection;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
+ * All Rights Reserved
  */
 public class BridgeComponent implements InstantComponent {
 

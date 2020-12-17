@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
+ * All Rights Reserved
  */
 public class ComponentGridPane extends Pane {
 
