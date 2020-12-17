@@ -16,7 +16,7 @@ public class TestComponent implements GridComponentTest {
 	}
 
 	@Override
-	public boolean tick(GridComponentContainer container) {
+	public boolean tick(ComponentContainer container) {
 		return false;
 	}
 
@@ -31,7 +31,7 @@ public class TestComponent implements GridComponentTest {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
+	public void render(ComponentContainer container) {
 
 	}
 

@@ -19,7 +19,7 @@ public abstract class Direction {
 	//
 	//  #   0,2 1,2 2,2
 
-	public static int getDirectionRelative(int xFrom, int yFrom, int xTo, int yTo) {
+	/*public static int getDirectionRelative(int xFrom, int yFrom, int xTo, int yTo) {
 		final int xDifference = xTo - xFrom;
 		final int yDifference = yTo - yFrom;
 
@@ -28,7 +28,7 @@ public abstract class Direction {
 		} else {
 			return yDifference > 0 ? DOWN : UP;
 		}
-	}
+	}*/
 
 	public static int getDirectionReversed(int direction) {
 		return (direction + 1) % 2 + (direction > 1 ? 2 : 0);

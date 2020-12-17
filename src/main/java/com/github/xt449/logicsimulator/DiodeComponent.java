@@ -1,5 +1,10 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.ImageView;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
@@ -32,10 +37,10 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		powered = nextPoweredState;
 
-		final GridComponentContainer squareForward = container.getRelativeGridSquare(direction);
+		final ComponentContainer squareForward = container.getRelativeComponentContainer(direction);
 		if(squareForward != null) {
 			if(squareForward.component instanceof InstantComponent) {
 				if(squareForward.component.hasInputFrom(Direction.getDirectionReversed(direction))) {
@@ -46,49 +51,48 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	}
 
 	@Override
-	public void updateState(GridComponentContainer container) {
+	public Collection<ImageView> getImages(ComponentContainer container) {
+		final ArrayDeque<ImageView> queue = new ArrayDeque<>(3);
+
+		final Component forwardComponent = container.getRelativeComponent(direction);
+		final int directionReversed = Direction.getDirectionReversed(direction);
+		final Component backwardComponent = container.getRelativeComponent(directionReversed);
+
+		if(powered) {
+			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
+				queue.add(new ImageView(Textures.getPoweredWire(direction)));
+			}
+
+			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
+				queue.add(new ImageView(Textures.getPoweredWire(directionReversed)));
+			}
+
+			queue.add(new ImageView(Textures.getPoweredDiode(direction)));
+		} else {
+			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
+				queue.add(new ImageView(Textures.getWire(direction)));
+			}
+
+			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
+				queue.add(new ImageView(Textures.getWire(directionReversed)));
+			}
+
+			queue.add(new ImageView(Textures.getDiode(direction)));
+		}
+
+		return queue;
+	}
+
+	@Override
+	public void updateState(ComponentContainer container) {
 		nextPoweredState = false;
 
-		final GridComponent component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		final Component component = container.getRelativeComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isSendingPower(direction)) {
 				nextPoweredState = true;
 			}
 		}
-	}
-
-	@Override
-	public void render(GridComponentContainer container) {
-		final GridComponent forwardComponent = container.getRelativeGridComponent(direction);
-		final int directionReversed = Direction.getDirectionReversed(direction);
-		final GridComponent backwardComponent = container.getRelativeGridComponent(directionReversed);
-
-		if(powered) {
-			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-//				LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredWire(direction));
-//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-			}
-
-			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-//				LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredWire(directionReversed));
-//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-			}
-
-//			LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredDiode(direction));
-		} else {
-			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-//				LogicSimulator.instance.prepareDrawTexture(Textures.getWire(direction));
-//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-			}
-
-			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-//				LogicSimulator.instance.prepareDrawTexture(Textures.getWire(directionReversed));
-//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-			}
-
-//			LogicSimulator.instance.prepareDrawTexture(Textures.getDiode(direction));
-		}
-//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override

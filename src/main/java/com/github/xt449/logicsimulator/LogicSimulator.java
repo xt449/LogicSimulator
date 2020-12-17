@@ -3,8 +3,10 @@ package com.github.xt449.logicsimulator;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -14,11 +16,7 @@ import javafx.stage.Stage;
  */
 public final class LogicSimulator extends Application {
 
-	private final int GRID_WIDTH = 40;
-	private final int GRID_HEIGHT = 20;
-	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
-
-	private final GridPane grid = new GridPane();
+	private final ComponentGridPane grid = new ComponentGridPane(32, 32, 40, 20);
 	private final GridPane drawer = new GridPane();
 	private final VBox root = new VBox(grid, drawer);
 
@@ -27,8 +25,10 @@ public final class LogicSimulator extends Application {
 		// Initialize
 		LogicSimulator.instance = this;
 
-		// Grid Background
-		grid.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
+		grid.getComponentContainerAt(2, 4).component = new SwitchComponent();
+
+		// Grid
+		/*grid.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
 		grid.setMinHeight(640);
 		grid.setPrefHeight(640);
 		grid.setMaxHeight(640);
@@ -43,19 +43,11 @@ public final class LogicSimulator extends Application {
 
 		grid.setOnMouseClicked(event -> {
 		});
-		grid.addColumn(0);
-		grid.addColumn(1);
-		grid.addColumn(2);
-		grid.addColumn(3);
-		grid.addRow(1);
-		grid.addRow(1);
-		grid.addRow(1);
-		grid.addRow(1);
-		grid.addRow(2);
 //		grid.add(new ImageView(Textures.BRIDGE_BOTH), 0, 0, 1, 1);
 //		grid.add(new ImageView(Textures.BRIDGE_BOTH), 1, 3, 1, 1);
 //		grid.add(new ImageView(Textures.BRIDGE_BOTH), 3, 1, 1, 1);
 		grid.add(new ImageView(Textures.SWITCH_OFF), 10, 10, 1, 1);
+		//grid.*/
 		//grid.
 
 		drawer.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
@@ -67,13 +59,6 @@ public final class LogicSimulator extends Application {
 		root.setAlignment(Pos.TOP_LEFT);
 		grid.layout();
 		root.layout();
-
-		// Populate Grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y] = new GridComponentContainer(x, y);
-			}
-		}
 	}
 
 	@Override
@@ -82,6 +67,12 @@ public final class LogicSimulator extends Application {
 		primaryStage.setTitle("Logic Simulator");
 		primaryStage.setResizable(false);
 		primaryStage.show();
+
+		//grid.getChildren().add(new ImageView(Textures.SWITCH_OFF));
+
+		grid.requestLayout();
+		grid.layout();
+		grid.layoutChildren();
 
 		//System.out.println(grid.getHeight());
 
@@ -92,22 +83,6 @@ public final class LogicSimulator extends Application {
 	@Override
 	public void stop() throws Exception {
 		// Stop
-	}
-
-	GridComponentContainer getComponentContainerAt(int x, int y) {
-		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
-			return null;
-		}
-
-		return containerGrid[x][y];
-	}
-
-	GridComponent getComponentAt(int x, int y) {
-		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
-			return null;
-		}
-
-		return containerGrid[x][y].component;
 	}
 
 	private int tickClock;
@@ -127,32 +102,6 @@ public final class LogicSimulator extends Application {
 			swapBuffers();
 			pollEvents();
 		} while(!shouldClose());*/
-	}
-
-	private void tick() {
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].tick();
-			}
-		}
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].updateState();
-			}
-		}
-	}
-
-	private void render() {
-		// Draw entire grid
-		/*prepareDrawTexture(Textures.CELL);
-		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);*/
-
-		// Render components on grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].render();
-			}
-		}
 	}
 
 	/*@Override

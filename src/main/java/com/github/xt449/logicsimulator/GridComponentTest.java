@@ -17,7 +17,7 @@ interface GridComponentTest {
 	/**
 	 * @return true if state changed
 	 */
-	boolean tick(GridComponentContainer container);
+	boolean tick(ComponentContainer container);
 
 	void tickEnd();
 
@@ -25,7 +25,7 @@ interface GridComponentTest {
 
 	State getState();
 
-	void render(GridComponentContainer container);
+	void render(ComponentContainer container);
 
 	interface State {
 		boolean isReceivingPower(int direction);

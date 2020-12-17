@@ -1,5 +1,10 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.ImageView;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
@@ -32,10 +37,10 @@ public class InverterComponent implements DelayedComponent, DirectionalComponent
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		powered = nextPoweredState;
 
-		final GridComponentContainer squareForward = container.getRelativeGridSquare(direction);
+		final ComponentContainer squareForward = container.getRelativeComponentContainer(direction);
 		if(squareForward != null) {
 			if(squareForward.component instanceof InstantComponent) {
 				if(squareForward.component.hasInputFrom(Direction.getDirectionReversed(direction))) {
@@ -46,34 +51,35 @@ public class InverterComponent implements DelayedComponent, DirectionalComponent
 	}
 
 	@Override
-	public void updateState(GridComponentContainer container) {
+	public Collection<ImageView> getImages(ComponentContainer container) {
+		final ArrayDeque<ImageView> queue = new ArrayDeque<>(3);
+
+		final Component forwardComponent = container.getRelativeComponent(direction);
+		if(forwardComponent != null && forwardComponent.hasIO(direction)) {
+			queue.add(new ImageView(!powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction)));
+		}
+
+		final int directionReversed = Direction.getDirectionReversed(direction);
+		final Component backwardComponent = container.getRelativeComponent(directionReversed);
+		if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
+			queue.add(new ImageView(powered ? Textures.getPoweredWire(directionReversed) : Textures.getWire(directionReversed)));
+		}
+
+		queue.add(new ImageView(powered ? Textures.getPoweredInverter(direction) : Textures.getInverter(direction)));
+
+		return queue;
+	}
+
+	@Override
+	public void updateState(ComponentContainer container) {
 		nextPoweredState = false;
 
-		final GridComponent component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		final Component component = container.getRelativeComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isSendingPower(direction)) {
 				nextPoweredState = true;
 			}
 		}
-	}
-
-	@Override
-	public void render(GridComponentContainer container) {
-		final GridComponent forwardComponent = container.getRelativeGridComponent(direction);
-		if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-//			LogicSimulator.instance.prepareDrawTexture(!powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
-//			LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-		}
-
-		final int directionReversed = Direction.getDirectionReversed(direction);
-		final GridComponent backwardComponent = container.getRelativeGridComponent(directionReversed);
-		if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-//			LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(directionReversed) : Textures.getWire(directionReversed));
-//			LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
-		}
-
-//		LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredInverter(direction) : Textures.getInverter(direction));
-//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override

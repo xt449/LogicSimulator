@@ -1,5 +1,10 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.ImageView;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  */
@@ -28,14 +33,14 @@ public class BridgeComponent implements InstantComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
 		poweredFrom[2] = false;
 		poweredFrom[3] = false;
 
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponentContainer otherContainer = container.getRelativeGridSquare(direction);
+			final ComponentContainer otherContainer = container.getRelativeComponentContainer(direction);
 			if(otherContainer != null) {
 				if(otherContainer.component != null) {
 					if(otherContainer.component.isSendingPower(Direction.getDirectionReversed(direction))) {
@@ -50,10 +55,10 @@ public class BridgeComponent implements InstantComponent {
 			}
 		}
 
-		final GridComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
-		final GridComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
-		final GridComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
-		final GridComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
+		final ComponentContainer containerUp = container.getRelativeComponentContainer(Direction.UP);
+		final ComponentContainer containerDown = container.getRelativeComponentContainer(Direction.DOWN);
+		final ComponentContainer containerLeft = container.getRelativeComponentContainer(Direction.LEFT);
+		final ComponentContainer containerRight = container.getRelativeComponentContainer(Direction.RIGHT);
 
 
 //		if(isSendingPower(Direction.UP)) {
@@ -131,40 +136,17 @@ public class BridgeComponent implements InstantComponent {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
-//		LogicSimulator.instance.prepareDrawTexture(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
-//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+	public Collection<ImageView> getImages(ComponentContainer container) {
+		final ArrayDeque<ImageView> queue = new ArrayDeque<>(1);
+		queue.add(new ImageView(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP))));
 
 		// TODO : Debug
-		for(int direction = 0; direction < poweredFrom.length; direction++) {
+		/*for(int direction = 0; direction < poweredFrom.length; direction++) {
 			if(poweredFrom[direction]) {
 //				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
 //				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 			}
-		}
+		}*/
+		return queue;
 	}
-
-	/*@Override
-	public void backtrack(GridSquare gridSquare) {
-		poweredFrom[0] = false;
-		poweredFrom[1] = false;
-		poweredFrom[2] = false;
-		poweredFrom[3] = false;
-
-		for(int direction = 0; direction < 4; direction++) {
-			final GridSquare square = gridSquare.getRelativeGridSquare(direction);
-			if(square != null) {
-				if(square.component != null) {
-					if(square.component.isSendingPower(Direction.getDirectionReversed(direction))) {
-						poweredFrom[direction] = true;
-
-						if(square.component instanceof InstantComponent) {
-							square.component.tick(square);
-							//return;
-						}
-					}
-				}
-			}
-		}
-	}*/
 }

@@ -1,10 +1,14 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.ImageView;
+
+import java.util.Collection;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-interface GridComponent {
+interface Component {
 
 	boolean isReceivingPower(int direction);
 
@@ -18,9 +22,9 @@ interface GridComponent {
 		return hasInputFrom(direction) || hasOutputTo(direction);
 	}
 
-	//abstract void preTick(GridSquare gridSquare);
+	void tick(ComponentContainer container);
 
-	void tick(GridComponentContainer container);
+	Collection<ImageView> getImages(ComponentContainer container);
 
-	void render(GridComponentContainer container);
+	//void render(ComponentContainer container);
 }

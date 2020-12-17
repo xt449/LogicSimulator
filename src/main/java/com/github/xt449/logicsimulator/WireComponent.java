@@ -1,5 +1,10 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.ImageView;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
@@ -31,7 +36,7 @@ public class WireComponent implements InstantComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		powered = false;
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
@@ -39,7 +44,7 @@ public class WireComponent implements InstantComponent {
 		poweredFrom[3] = false;
 
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponentContainer otherContainer = container.getRelativeGridSquare(direction);
+			final ComponentContainer otherContainer = container.getRelativeComponentContainer(direction);
 			if(otherContainer != null) {
 				if(otherContainer.component != null) {
 					if(otherContainer.component.isSendingPower(Direction.getDirectionReversed(direction))) {
@@ -54,10 +59,10 @@ public class WireComponent implements InstantComponent {
 			}
 		}
 
-		final GridComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
-		final GridComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
-		final GridComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
-		final GridComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
+		final ComponentContainer containerUp = container.getRelativeComponentContainer(Direction.UP);
+		final ComponentContainer containerDown = container.getRelativeComponentContainer(Direction.DOWN);
+		final ComponentContainer containerLeft = container.getRelativeComponentContainer(Direction.LEFT);
+		final ComponentContainer containerRight = container.getRelativeComponentContainer(Direction.RIGHT);
 
 		if(powered) {
 			if(containerUp != null) {
@@ -155,56 +160,28 @@ public class WireComponent implements InstantComponent {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
+	public Collection<ImageView> getImages(ComponentContainer container) {
+		final ArrayDeque<ImageView> queue = new ArrayDeque<>(5);
+
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponent component = container.getRelativeGridComponent(direction);
+			final Component component = container.getRelativeComponent(direction);
 			if(component != null) {
 				if(component.hasIO(Direction.getDirectionReversed(direction))) {
-//					LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
-//					LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+					queue.add(new ImageView(powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction)));
 				}
 			}
 		}
 
-//		LogicSimulator.instance.prepareDrawTexture(powered ? Textures.WIRE_CENTER_POWERED : Textures.WIRE_CENTER);
-//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+		queue.add(new ImageView(powered ? Textures.WIRE_CENTER_POWERED : Textures.WIRE_CENTER));
 
 		// TODO : Debug
-		for(int direction = 0; direction < poweredFrom.length; direction++) {
+		/*for(int direction = 0; direction < poweredFrom.length; direction++) {
 			if(poweredFrom[direction]) {
 //				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
 //				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 			}
-		}
+		}*/
+
+		return queue;
 	}
-
-	/*@Override
-	public void backtrack(GridSquare gridSquare, LinkedList<GridSquare> stack) {
-
-	}
-
-	@Override
-	public void backtrack(GridSquare gridSquare) {
-		powered = false;
-		poweredFrom[0] = false;
-		poweredFrom[1] = false;
-		poweredFrom[2] = false;
-		poweredFrom[3] = false;
-
-		for(int direction = 0; direction < 4; direction++) {
-			final GridSquare square = gridSquare.getRelativeGridSquare(direction);
-			if(square != null) {
-				if(square.component != null) {
-					if(square.component.isSendingPower(Direction.getDirectionReversed(direction))) {
-						powered = true;
-						poweredFrom[direction] = true;
-
-						if(square.component instanceof InstantComponent) {
-							((InstantComponent) square.component).backtrack(square);
-						}
-					}
-				}
-			}
-		}
-	}*/
 }
