@@ -3,7 +3,7 @@ package com.github.xt449.logicsimulator;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -14,19 +14,9 @@ import javafx.stage.Stage;
  */
 public final class LogicSimulator extends Application {
 
-	public static void main(String[] args) {
-		launch(args);
-	}
-
-	static LogicSimulator instance;
-
-	// Instance
-
 	private final int GRID_WIDTH = 40;
 	private final int GRID_HEIGHT = 20;
 	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
-
-	//private Texture currentTexture;
 
 	private final GridPane grid = new GridPane();
 	private final GridPane drawer = new GridPane();
@@ -38,10 +28,35 @@ public final class LogicSimulator extends Application {
 		LogicSimulator.instance = this;
 
 		// Grid Background
-		grid.setBackground(new Background(new BackgroundImage(new Image(LogicSimulator.class.getResourceAsStream("/textures/cell.png")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
+		grid.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
 		grid.setMinHeight(640);
 		grid.setPrefHeight(640);
 		grid.setMaxHeight(640);
+
+		for(int x = 0; x < 40; x++) {
+			grid.getColumnConstraints().add(new ColumnConstraints(32, 32, 32));
+		}
+		for(int y = 0; y < 20; y++) {
+			grid.getRowConstraints().add(new RowConstraints(32, 32, 32));
+		}
+		// TODO - grid.setGridLinesVisible(true);
+
+		grid.setOnMouseClicked(event -> {
+		});
+		grid.addColumn(0);
+		grid.addColumn(1);
+		grid.addColumn(2);
+		grid.addColumn(3);
+		grid.addRow(1);
+		grid.addRow(1);
+		grid.addRow(1);
+		grid.addRow(1);
+		grid.addRow(2);
+//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 0, 0, 1, 1);
+//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 1, 3, 1, 1);
+//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 3, 1, 1, 1);
+		grid.add(new ImageView(Textures.SWITCH_OFF), 10, 10, 1, 1);
+		//grid.
 
 		drawer.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		drawer.setMinHeight(80);
@@ -68,7 +83,7 @@ public final class LogicSimulator extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 
-		System.out.println(grid.getHeight());
+		//System.out.println(grid.getHeight());
 
 		// Loop
 		loop();
@@ -177,4 +192,12 @@ public final class LogicSimulator extends Application {
 			}
 		}
 	}*/
+
+	// Static
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	static LogicSimulator instance;
 }
