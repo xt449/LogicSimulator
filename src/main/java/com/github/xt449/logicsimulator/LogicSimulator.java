@@ -1,27 +1,83 @@
 package com.github.xt449.logicsimulator;
 
-import org.joml.Matrix4f;
-import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.opengl.GL33C.*;
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public final class LogicSimulator extends GLFWManager {
+public final class LogicSimulator extends Application {
 
 	public static void main(String[] args) {
-		new LogicSimulator().run();
+		launch(args);
 	}
 
 	static LogicSimulator instance;
 
+	// Instance
+
 	private final int GRID_WIDTH = 40;
 	private final int GRID_HEIGHT = 20;
 	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
+
+	//private Texture currentTexture;
+
+	private final GridPane grid = new GridPane();
+	private final GridPane drawer = new GridPane();
+	private final VBox root = new VBox(grid, drawer);
+
+	@Override
+	public void init() throws Exception {
+		// Initialize
+		LogicSimulator.instance = this;
+
+		// Grid Background
+		grid.setBackground(new Background(new BackgroundImage(new Image(LogicSimulator.class.getResourceAsStream("/textures/cell.png")), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
+		grid.setMinHeight(640);
+		grid.setPrefHeight(640);
+		grid.setMaxHeight(640);
+
+		drawer.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
+		drawer.setMinHeight(80);
+		drawer.setPrefHeight(80);
+		drawer.setMaxHeight(80);
+
+		// Setup root container
+		root.setAlignment(Pos.TOP_LEFT);
+		grid.layout();
+		root.layout();
+
+		// Populate Grid
+		for(int y = 0; y < GRID_HEIGHT; y++) {
+			for(int x = 0; x < GRID_WIDTH; x++) {
+				containerGrid[x][y] = new GridComponentContainer(x, y);
+			}
+		}
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setScene(new Scene(root, 1280, 720));
+		primaryStage.setTitle("Logic Simulator");
+		primaryStage.setResizable(false);
+		primaryStage.show();
+
+		System.out.println(grid.getHeight());
+
+		// Loop
+		loop();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		// Stop
+	}
 
 	GridComponentContainer getComponentContainerAt(int x, int y) {
 		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
@@ -39,101 +95,11 @@ public final class LogicSimulator extends GLFWManager {
 		return containerGrid[x][y].component;
 	}
 
-	private Texture currentTexture;
-
-	int orthograhpicProgram;
-	int vbo;
-	int vao;
-
-	public void run() {
-		System.out.println("LWJGL " + Version.getVersion());
-
-		LogicSimulator.instance = this;
-		// Initialize
-		initialize();
-
-		GL.createCapabilities();
-		glEnable(GL_TEXTURE_2D);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		// Program and Shaders
-		orthograhpicProgram = glCreateProgram();
-
-		final int orthograhpicVertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(orthograhpicVertexShader, ResourceLoader.readAllLines("/simple.vsh"));
-		glCompileShader(orthograhpicVertexShader);
-		if(glGetShaderi(orthograhpicVertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			System.out.println(glGetShaderInfoLog(orthograhpicVertexShader));
-		}
-		glAttachShader(orthograhpicProgram, orthograhpicVertexShader);
-
-		final int orthograhpicFragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(orthograhpicFragmentShader, ResourceLoader.readAllLines("/simple.fsh"));
-		glCompileShader(orthograhpicFragmentShader);
-		if(glGetShaderi(orthograhpicFragmentShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			System.out.println(glGetShaderInfoLog(orthograhpicFragmentShader));
-		}
-		glAttachShader(orthograhpicProgram, orthograhpicFragmentShader);
-
-		glLinkProgram(orthograhpicProgram);
-		if(glGetProgrami(orthograhpicProgram, GL_LINK_STATUS) == GL_FALSE) {
-			System.out.println(glGetProgramInfoLog(orthograhpicProgram));
-		}
-//		glUseProgram(orthograhpicProgram);
-
-		glDeleteShader(orthograhpicVertexShader);
-		glDeleteShader(orthograhpicFragmentShader);
-
-		// VBO
-		vbo = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-		// VAO
-		vao = glGenVertexArrays();
-		glBindVertexArray(vao);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-
-		// Textures
-		Textures.init();
-
-		// Populate Grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y] = new GridComponentContainer(x, y);
-			}
-		}
-
-		// Loop
-		loop();
-
-		// Exit
-		exit();
-	}
-
-	private final float[] vertices = {
-			// pos      // tex
-			0.0F, 1.0F, 0.0F, 1.0F,
-			1.0F, 0.0F, 1.0F, 0.0F,
-			0.0F, 0.0F, 0.0F, 0.0F,
-
-			0.0F, 1.0F, 0.0F, 1.0F,
-			1.0F, 1.0F, 1.0F, 1.0F,
-			1.0F, 0.0F, 1.0F, 0.0F,
-	};
-
 	private int tickClock;
 	private boolean paused;
 
 	private void loop() {
-		do {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
+		/*do {
 			if(!paused) {
 				if(++tickClock == 6) {
 					tick();
@@ -145,7 +111,7 @@ public final class LogicSimulator extends GLFWManager {
 
 			swapBuffers();
 			pollEvents();
-		} while(!shouldClose());
+		} while(!shouldClose());*/
 	}
 
 	private void tick() {
@@ -162,24 +128,9 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	private void render() {
-		// Prepare to draw entire grid
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, new float[] {
-				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
-				1.0F, 0.0F, GRID_WIDTH, 0.0F,
-				0.0F, 0.0F, 0.0F, 0.0F,
-
-				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
-				1.0F, 1.0F, GRID_WIDTH, GRID_HEIGHT,
-				1.0F, 0.0F, GRID_WIDTH, 0.0F,
-		}, GL_STATIC_DRAW);
 		// Draw entire grid
-		prepareDrawTexture(Textures.CELL);
-		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
-
-		// Prepare to draw normal single cell textures
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
+		/*prepareDrawTexture(Textures.CELL);
+		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);*/
 
 		// Render components on grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
@@ -189,53 +140,7 @@ public final class LogicSimulator extends GLFWManager {
 		}
 	}
 
-	void prepareDrawTexture(Texture texture) {
-		currentTexture = texture;
-
-		glUseProgram(orthograhpicProgram);
-
-		//
-
-		glUniform1i(glGetUniformLocation(orthograhpicProgram, "image"), 0);
-
-		//
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
-
-		glBindVertexArray(vao);
-	}
-
-	void drawTextureExact(float xPosition, float yPosition, float xScale, float yScale) {
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "model"), false,
-				new Matrix4f().translate(xPosition, yPosition, 0)
-						.scale(currentTexture.width * xScale, currentTexture.height * yScale, 0)
-						.get(new float[16])
-		);
-		glUniformMatrix4fv(glGetUniformLocation(orthograhpicProgram, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		glBindVertexArray(0);
-	}
-
-	void drawTextureExactPosition(float xExact, float yExact) {
-		drawTextureExact(xExact, yExact, 1, 1);
-	}
-
-	void drawTextureGridPosition(int xGrid, int yGrid) {
-		drawTextureExactPosition(xGrid * currentTexture.width, yGrid * currentTexture.height);
-	}
-
-	void drawTextureRatioPosition(float xGridRatio, float yGridOffset) {
-		drawTextureExactPosition(xGridRatio * windowWidth, yGridOffset * windowHeight);
-	}
-
-	@Override
+	/*@Override
 	void keyCallback(long window, int key, int scancode, int action, int mods) {
 		if(key == GLFW.GLFW_KEY_P && action == 1) {
 			paused = !paused;
@@ -244,7 +149,6 @@ public final class LogicSimulator extends GLFWManager {
 
 	@Override
 	void mouseButtonCallback(long window, int button, int action, int mods) {
-//		if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
 		final GridComponentContainer target = getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
@@ -272,6 +176,5 @@ public final class LogicSimulator extends GLFWManager {
 				}
 			}
 		}
-//		}
-	}
+	}*/
 }

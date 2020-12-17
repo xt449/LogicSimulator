@@ -160,20 +160,20 @@ public class WireComponent implements InstantComponent {
 			final GridComponent component = container.getRelativeGridComponent(direction);
 			if(component != null) {
 				if(component.hasIO(Direction.getDirectionReversed(direction))) {
-					LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
-					LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+//					LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
+//					LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 				}
 			}
 		}
 
-		LogicSimulator.instance.prepareDrawTexture(powered ? Textures.WIRE_CENTER_POWERED : Textures.WIRE_CENTER);
-		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+//		LogicSimulator.instance.prepareDrawTexture(powered ? Textures.WIRE_CENTER_POWERED : Textures.WIRE_CENTER);
+//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 
 		// TODO : Debug
 		for(int direction = 0; direction < poweredFrom.length; direction++) {
 			if(poweredFrom[direction]) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+//				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
+//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 			}
 		}
 	}

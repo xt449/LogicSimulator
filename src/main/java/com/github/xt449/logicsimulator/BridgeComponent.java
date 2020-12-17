@@ -132,14 +132,14 @@ public class BridgeComponent implements InstantComponent {
 
 	@Override
 	public void render(GridComponentContainer container) {
-		LogicSimulator.instance.prepareDrawTexture(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
-		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+//		LogicSimulator.instance.prepareDrawTexture(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
+//		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 
 		// TODO : Debug
 		for(int direction = 0; direction < poweredFrom.length; direction++) {
 			if(poweredFrom[direction]) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+//				LogicSimulator.instance.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
+//				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 			}
 		}
 	}

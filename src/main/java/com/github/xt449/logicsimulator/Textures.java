@@ -1,28 +1,26 @@
 package com.github.xt449.logicsimulator;
 
+import javafx.scene.image.Image;
+
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
 public abstract class Textures {
 
-	static void init() {
-		System.out.println("First texture ID is " + CELL.id);
-	}
+	static final Image CELL = new Image(LogicSimulator.class.getResourceAsStream("/textures/cell.png"));
 
-	static final Texture CELL = new Texture("cell.png");
-
-	static final Texture WIRE_CENTER = new Texture("wire_center.png");
-	static final Texture WIRE_CENTER_POWERED = new Texture("wire_center_powered.png");
+	static final Image WIRE_CENTER = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_center.png"));
+	static final Image WIRE_CENTER_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_center_powered.png"));
 
 	// Wires
 
-	static final Texture WIRE_UP = new Texture("wire_up.png");
-	static final Texture WIRE_DOWN = new Texture("wire_down.png");
-	static final Texture WIRE_LEFT = new Texture("wire_left.png");
-	static final Texture WIRE_RIGHT = new Texture("wire_right.png");
+	static final Image WIRE_UP = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_up.png"));
+	static final Image WIRE_DOWN = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_down.png"));
+	static final Image WIRE_LEFT = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_left.png"));
+	static final Image WIRE_RIGHT = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_right.png"));
 
-	static final Texture[] WIRES = {
+	static final Image[] WIRES = {
 			WIRE_UP,
 			WIRE_DOWN,
 			WIRE_LEFT,
@@ -31,12 +29,12 @@ public abstract class Textures {
 
 	// Wires Powered
 
-	static final Texture WIRE_UP_POWERED = new Texture("wire_up_powered.png");
-	static final Texture WIRE_DOWN_POWERED = new Texture("wire_down_powered.png");
-	static final Texture WIRE_LEFT_POWERED = new Texture("wire_left_powered.png");
-	static final Texture WIRE_RIGHT_POWERED = new Texture("wire_right_powered.png");
+	static final Image WIRE_UP_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_up_powered.png"));
+	static final Image WIRE_DOWN_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_down_powered.png"));
+	static final Image WIRE_LEFT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_left_powered.png"));
+	static final Image WIRE_RIGHT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/wire_right_powered.png"));
 
-	static final Texture[] WIRES_POWERED = {
+	static final Image[] WIRES_POWERED = {
 			WIRE_UP_POWERED,
 			WIRE_DOWN_POWERED,
 			WIRE_LEFT_POWERED,
@@ -45,12 +43,12 @@ public abstract class Textures {
 
 	// Inverters
 
-	static final Texture INVERTER_UP = new Texture("inverter_up.png");
-	static final Texture INVERTER_DOWN = new Texture("inverter_down.png");
-	static final Texture INVERTER_LEFT = new Texture("inverter_left.png");
-	static final Texture INVERTER_RIGHT = new Texture("inverter_right.png");
+	static final Image INVERTER_UP = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_up.png"));
+	static final Image INVERTER_DOWN = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_down.png"));
+	static final Image INVERTER_LEFT = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_left.png"));
+	static final Image INVERTER_RIGHT = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_right.png"));
 
-	static final Texture[] INVERTERS = {
+	static final Image[] INVERTERS = {
 			INVERTER_UP,
 			INVERTER_DOWN,
 			INVERTER_LEFT,
@@ -59,12 +57,12 @@ public abstract class Textures {
 
 	// Inverters Powered
 
-	static final Texture INVERTER_UP_POWERED = new Texture("inverter_up_powered.png");
-	static final Texture INVERTER_DOWN_POWERED = new Texture("inverter_down_powered.png");
-	static final Texture INVERTER_LEFT_POWERED = new Texture("inverter_left_powered.png");
-	static final Texture INVERTER_RIGHT_POWERED = new Texture("inverter_right_powered.png");
+	static final Image INVERTER_UP_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_up_powered.png"));
+	static final Image INVERTER_DOWN_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_down_powered.png"));
+	static final Image INVERTER_LEFT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_left_powered.png"));
+	static final Image INVERTER_RIGHT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/inverter_right_powered.png"));
 
-	static final Texture[] INVERTERS_POWERED = {
+	static final Image[] INVERTERS_POWERED = {
 			INVERTER_UP_POWERED,
 			INVERTER_DOWN_POWERED,
 			INVERTER_LEFT_POWERED,
@@ -73,12 +71,12 @@ public abstract class Textures {
 
 	// Diodes
 
-	static final Texture DIODE_UP = new Texture("diode_up.png");
-	static final Texture DIODE_DOWN = new Texture("diode_down.png");
-	static final Texture DIODE_LEFT = new Texture("diode_left.png");
-	static final Texture DIODE_RIGHT = new Texture("diode_right.png");
+	static final Image DIODE_UP = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_up.png"));
+	static final Image DIODE_DOWN = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_down.png"));
+	static final Image DIODE_LEFT = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_left.png"));
+	static final Image DIODE_RIGHT = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_right.png"));
 
-	static final Texture[] DIODES = {
+	static final Image[] DIODES = {
 			DIODE_UP,
 			DIODE_DOWN,
 			DIODE_LEFT,
@@ -86,13 +84,12 @@ public abstract class Textures {
 	};
 
 	// Diodes Powered
+	static final Image DIODE_UP_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_up_powered.png"));
+	static final Image DIODE_DOWN_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_down_powered.png"));
+	static final Image DIODE_LEFT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_left_powered.png"));
+	static final Image DIODE_RIGHT_POWERED = new Image(LogicSimulator.class.getResourceAsStream("/textures/diode_right_powered.png"));
 
-	static final Texture DIODE_UP_POWERED = new Texture("diode_up_powered.png");
-	static final Texture DIODE_DOWN_POWERED = new Texture("diode_down_powered.png");
-	static final Texture DIODE_LEFT_POWERED = new Texture("diode_left_powered.png");
-	static final Texture DIODE_RIGHT_POWERED = new Texture("diode_right_powered.png");
-
-	static final Texture[] DIODES_POWERED = {
+	static final Image[] DIODES_POWERED = {
 			DIODE_UP_POWERED,
 			DIODE_DOWN_POWERED,
 			DIODE_LEFT_POWERED,
@@ -101,12 +98,12 @@ public abstract class Textures {
 
 	// Arrows
 
-	static final Texture ARROW_UP = new Texture("arrow_up.png");
-	static final Texture ARROW_DOWN = new Texture("arrow_down.png");
-	static final Texture ARROW_LEFT = new Texture("arrow_left.png");
-	static final Texture ARROW_RIGHT = new Texture("arrow_right.png");
+	static final Image ARROW_UP = new Image(LogicSimulator.class.getResourceAsStream("/textures/arrow_up.png"));
+	static final Image ARROW_DOWN = new Image(LogicSimulator.class.getResourceAsStream("/textures/arrow_down.png"));
+	static final Image ARROW_LEFT = new Image(LogicSimulator.class.getResourceAsStream("/textures/arrow_left.png"));
+	static final Image ARROW_RIGHT = new Image(LogicSimulator.class.getResourceAsStream("/textures/arrow_right.png"));
 
-	static final Texture[] ARROWS = {
+	static final Image[] ARROWS = {
 			ARROW_UP,
 			ARROW_DOWN,
 			ARROW_LEFT,
@@ -115,19 +112,19 @@ public abstract class Textures {
 
 	// Switches
 
-	static final Texture SWITCH_OFF = new Texture("switch_off.png");
-	static final Texture SWITCH_ON = new Texture("switch_on.png");
+	static final Image SWITCH_OFF = new Image(LogicSimulator.class.getResourceAsStream("/textures/switch_off.png"));
+	static final Image SWITCH_ON = new Image(LogicSimulator.class.getResourceAsStream("/textures/switch_on.png"));
 
 	// Bridges
 
-	static final Texture BRIDGE_NONE = new Texture("bridge_none.png");
-	static final Texture BRIDGE_HORIZONTAL = new Texture("bridge_horizontal.png");
-	static final Texture BRIDGE_VERTICAL = new Texture("bridge_vertical.png");
-	static final Texture BRIDGE_BOTH = new Texture("bridge_both.png");
+	static final Image BRIDGE_NONE = new Image(LogicSimulator.class.getResourceAsStream("/textures/bridge_none.png"));
+	static final Image BRIDGE_HORIZONTAL = new Image(LogicSimulator.class.getResourceAsStream("/textures/bridge_horizontal.png"));
+	static final Image BRIDGE_VERTICAL = new Image(LogicSimulator.class.getResourceAsStream("/textures/bridge_vertical.png"));
+	static final Image BRIDGE_BOTH = new Image(LogicSimulator.class.getResourceAsStream("/textures/bridge_both.png"));
 
 	// Getters
 
-	static Texture getWire(int direction) {
+	static Image getWire(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return WIRE_UP;
@@ -142,7 +139,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getPoweredWire(int direction) {
+	static Image getPoweredWire(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return WIRE_UP_POWERED;
@@ -157,7 +154,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getInverter(int direction) {
+	static Image getInverter(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return INVERTER_UP;
@@ -172,7 +169,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getPoweredInverter(int direction) {
+	static Image getPoweredInverter(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return INVERTER_UP_POWERED;
@@ -187,7 +184,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getDiode(int direction) {
+	static Image getDiode(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return DIODE_UP;
@@ -202,7 +199,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getPoweredDiode(int direction) {
+	static Image getPoweredDiode(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return DIODE_UP_POWERED;
@@ -217,7 +214,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getArrow(int direction) {
+	static Image getArrow(int direction) {
 		switch(direction) {
 			case Direction.UP:
 				return ARROW_UP;
@@ -232,7 +229,7 @@ public abstract class Textures {
 		}
 	}
 
-	static Texture getBridge(boolean horizontal, boolean vertical) {
+	static Image getBridge(boolean horizontal, boolean vertical) {
 		if(horizontal) {
 			if(vertical) {
 				return BRIDGE_BOTH;
