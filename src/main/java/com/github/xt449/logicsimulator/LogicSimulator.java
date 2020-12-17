@@ -25,7 +25,8 @@ public final class LogicSimulator extends Application {
 		// Initialize
 		LogicSimulator.instance = this;
 
-		grid.getComponentContainerAt(2, 4).component = new SwitchComponent();
+		grid.getComponentContainerAt(0, 0).component = new SwitchComponent();
+		grid.getComponentContainerAt(0, 0).updateState();
 
 		// Grid
 		/*grid.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
@@ -68,11 +69,20 @@ public final class LogicSimulator extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 
-		//grid.getChildren().add(new ImageView(Textures.SWITCH_OFF));
+		//grid.getChildren().add(new ImageView(Textures.WIRE_CENTER_POWERED));
 
 		grid.requestLayout();
 		grid.layout();
+
+		grid.getComponentContainerAt(2, 4).component = new SwitchComponent();
+		grid.getComponentContainerAt(2, 4).updateState();
+
 		grid.layoutChildren();
+
+		grid.getComponentContainerAt(1, 1).component = new SwitchComponent();
+		grid.getComponentContainerAt(1, 1).updateState();
+
+		root.layout();
 
 		//System.out.println(grid.getHeight());
 

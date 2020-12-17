@@ -2,6 +2,9 @@ package com.github.xt449.logicsimulator;
 
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.Pane;
 
 /**
@@ -29,11 +32,10 @@ public class ComponentGridPane extends Pane {
 		for(int y = 0; y < gridHeight; y++) {
 			for(int x = 0; x < gridWidth; x++) {
 				getChildren().add(this.containerGrid[x][y] = new ComponentContainer(this, x, y));
-				getManagedChildren().add(this.containerGrid[x][y] = new ComponentContainer(this, x, y));
 			}
 		}
 
-		//this.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
+		this.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
 
 		final int width = cellWidth * gridWidth;
 		this.setMinWidth(width);
@@ -50,9 +52,7 @@ public class ComponentGridPane extends Pane {
 	protected void layoutChildren() {
 		for(int y = 0; y < gridHeight; y++) {
 			for(int x = 0; x < gridWidth; x++) {
-				if(containerGrid[x][y] != null) {
-					layoutInArea(containerGrid[x][y], x * cellWidth, y * cellHeight, cellWidth, cellHeight, 0, HPos.CENTER, VPos.CENTER);
-				}
+				layoutInArea(containerGrid[x][y], x * cellWidth, y * cellHeight, cellWidth, cellHeight, 0, HPos.CENTER, VPos.CENTER);
 			}
 		}
 	}
@@ -64,14 +64,4 @@ public class ComponentGridPane extends Pane {
 
 		return containerGrid[x][y];
 	}
-
-	Component getComponentAt(int x, int y) {
-		if(x < 0 || x >= gridWidth || y < 0 || y >= gridHeight) {
-			return null;
-		}
-
-		return containerGrid[x][y].component;
-	}
-
-	//void setComponentAt(int x, int y, )
 }

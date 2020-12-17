@@ -32,6 +32,11 @@ public class ComponentContainer extends Group {
 		if(component instanceof DelayedComponent) {
 			((DelayedComponent) component).updateState(this);
 		}
+
+		getChildren().clear();
+		if(component != null) {
+			getChildren().addAll(component.getImages(this));
+		}
 	}
 
 	public ComponentContainer getRelativeComponentContainer(int direction) {
@@ -50,28 +55,7 @@ public class ComponentContainer extends Group {
 	}
 
 	public Component getRelativeComponent(int direction) {
-		switch(direction) {
-			case Direction.UP:
-				return gridPane.getComponentAt(x, y - 1);
-			case Direction.DOWN:
-				return gridPane.getComponentAt(x, y + 1);
-			case Direction.LEFT:
-				return gridPane.getComponentAt(x - 1, y);
-			case Direction.RIGHT:
-				return gridPane.getComponentAt(x + 1, y);
-		}
-
-		return null;
-	}
-
-	@Override
-	protected void layoutChildren() {
-		getChildren().clear();
-		if(component != null) {
-			getManagedChildren().addAll(component.getImages(this));
-		}
-
-		super.layoutChildren();
+		return getRelativeComponentContainer(direction).component;
 	}
 
 	@Override
