@@ -1,14 +1,17 @@
 package com.github.xt449.logicsimulator;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
@@ -20,36 +23,16 @@ public final class LogicSimulator extends Application {
 	private final GridPane drawer = new GridPane();
 	private final VBox root = new VBox(grid, drawer);
 
-	@Override
-	public void init() throws Exception {
-		// Initialize
-		LogicSimulator.instance = this;
+	private boolean running;
+	private boolean paused;
+	private long tickClock;
 
+	private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+	@Override
+	public void init() {
 		grid.getComponentContainerAt(0, 0).component = new SwitchComponent();
 		grid.getComponentContainerAt(0, 0).updateState();
-
-		// Grid
-		/*grid.setBackground(new Background(new BackgroundImage(Textures.CELL, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null)));
-		grid.setMinHeight(640);
-		grid.setPrefHeight(640);
-		grid.setMaxHeight(640);
-
-		for(int x = 0; x < 40; x++) {
-			grid.getColumnConstraints().add(new ColumnConstraints(32, 32, 32));
-		}
-		for(int y = 0; y < 20; y++) {
-			grid.getRowConstraints().add(new RowConstraints(32, 32, 32));
-		}
-		// TODO - grid.setGridLinesVisible(true);
-
-		grid.setOnMouseClicked(event -> {
-		});
-//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 0, 0, 1, 1);
-//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 1, 3, 1, 1);
-//		grid.add(new ImageView(Textures.BRIDGE_BOTH), 3, 1, 1, 1);
-		grid.add(new ImageView(Textures.SWITCH_OFF), 10, 10, 1, 1);
-		//grid.*/
-		//grid.
 
 		drawer.setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 		drawer.setMinHeight(80);
@@ -57,61 +40,48 @@ public final class LogicSimulator extends Application {
 		drawer.setMaxHeight(80);
 
 		// Setup root container
-		root.setAlignment(Pos.TOP_LEFT);
-		grid.layout();
-		root.layout();
+		//root.setAlignment(Pos.TOP_LEFT);
+		//grid.layout();
+		//root.layout();
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		primaryStage.setScene(new Scene(root, 1280, 720));
 		primaryStage.setTitle("Logic Simulator");
 		primaryStage.setResizable(false);
+
+		// Events
+		primaryStage.setOnCloseRequest(event -> running = false);
+		root.setOnKeyPressed(this::keyCallback);
+
+		// Show
 		primaryStage.show();
 
-		//grid.getChildren().add(new ImageView(Textures.WIRE_CENTER_POWERED));
-
-		grid.requestLayout();
-		grid.layout();
-
-		grid.getComponentContainerAt(2, 4).component = new SwitchComponent();
-		grid.getComponentContainerAt(2, 4).updateState();
-
-		grid.layoutChildren();
-
-		grid.getComponentContainerAt(1, 1).component = new SwitchComponent();
-		grid.getComponentContainerAt(1, 1).updateState();
-
-		root.layout();
-
-		//System.out.println(grid.getHeight());
-
-		// Loop
-		loop();
+		running = true;
+		executorService.submit(this::logicLoop);
 	}
 
 	@Override
-	public void stop() throws Exception {
-		// Stop
+	public void stop() {
+		executorService.shutdownNow();
 	}
 
-	private int tickClock;
-	private boolean paused;
-
-	private void loop() {
-		/*do {
+	private void logicLoop() {
+		do {
 			if(!paused) {
-				if(++tickClock == 6) {
-					tick();
-					tickClock = 0;
+				long time = System.currentTimeMillis();
+				if(time - tickClock >= 100) {
+					tickClock = time;
+					grid.tick();
 				}
 			}
+			grid.updateState();
+		} while(running);
+	}
 
-			render();
-
-			swapBuffers();
-			pollEvents();
-		} while(!shouldClose());*/
+	private void keyCallback(KeyEvent event) {
+		// TODO
 	}
 
 	/*@Override
@@ -157,6 +127,4 @@ public final class LogicSimulator extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
-	static LogicSimulator instance;
 }

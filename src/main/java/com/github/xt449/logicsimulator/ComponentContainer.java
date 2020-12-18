@@ -20,6 +20,11 @@ public class ComponentContainer extends Group {
 		this.gridPane = gridPane;
 		this.x = x;
 		this.y = y;
+
+//		this.onMousePressedProperty();
+//		this.setOnMouseClicked();
+//		this.onMouseReleasedProperty();
+//		this.onmousedrag
 	}
 
 	public void tick() {

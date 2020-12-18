@@ -65,4 +65,20 @@ public class ComponentGridPane extends Pane {
 
 		return containerGrid[x][y];
 	}
+
+	void tick() {
+		for(int y = 0; y < gridHeight; y++) {
+			for(int x = 0; x < gridWidth; x++) {
+				containerGrid[x][y].tick();
+			}
+		}
+	}
+
+	void updateState() {
+		for(int y = 0; y < gridHeight; y++) {
+			for(int x = 0; x < gridWidth; x++) {
+				containerGrid[x][y].updateState();
+			}
+		}
+	}
 }
