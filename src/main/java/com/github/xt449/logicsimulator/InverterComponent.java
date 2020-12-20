@@ -49,7 +49,7 @@ public class InverterComponent implements DelayedComponent, DirectionalComponent
 	public void updateState(ComponentContainer container) {
 		nextPoweredState = false;
 
-		final Component component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		final Component component = container.getRelativeComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isSendingPower(direction)) {
 				nextPoweredState = true;
@@ -59,21 +59,21 @@ public class InverterComponent implements DelayedComponent, DirectionalComponent
 
 	@Override
 	public void render(ComponentContainer container) {
-		final Component forwardComponent = container.getRelativeGridComponent(direction);
+		final Component forwardComponent = container.getRelativeComponent(direction);
 		if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-			LogicSimulator.instance.prepareDrawTexture(!powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
-			LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+			container.simulator.prepareDrawTexture(!powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));
+			container.simulator.drawTextureGridPosition(container.x, container.y);
 		}
 
 		final int directionReversed = Direction.getDirectionReversed(direction);
-		final Component backwardComponent = container.getRelativeGridComponent(directionReversed);
+		final Component backwardComponent = container.getRelativeComponent(directionReversed);
 		if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-			LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(directionReversed) : Textures.getWire(directionReversed));
-			LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+			container.simulator.prepareDrawTexture(powered ? Textures.getPoweredWire(directionReversed) : Textures.getWire(directionReversed));
+			container.simulator.drawTextureGridPosition(container.x, container.y);
 		}
 
-		LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredInverter(direction) : Textures.getInverter(direction));
-		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+		container.simulator.prepareDrawTexture(powered ? Textures.getPoweredInverter(direction) : Textures.getInverter(direction));
+		container.simulator.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override

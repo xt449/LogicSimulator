@@ -13,41 +13,26 @@ import static org.lwjgl.opengl.GL33C.*;
  */
 public final class LogicSimulator extends GLFWManager {
 
-	public static void main(String[] args) {
-		new LogicSimulator().run();
-	}
-
-	static LogicSimulator instance;
-
-	private final int GRID_WIDTH = 40;
-	private final int GRID_HEIGHT = 20;
-	private final ComponentContainer[][] containerGrid = new ComponentContainer[GRID_WIDTH][GRID_HEIGHT];
-
-	ComponentContainer getComponentContainerAt(int x, int y) {
-		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
-			return null;
-		}
-
-		return containerGrid[x][y];
-	}
-
-	Component getComponentAt(int x, int y) {
-		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
-			return null;
-		}
-
-		return containerGrid[x][y].component;
-	}
-
 	private Texture currentTexture;
-
 	private int orthograhpicProgram;
-	private VertexObject squareVertex;
+
+	VertexObject squareVertex;
+
+	final ComponentGrid grid = new ComponentGrid(this, 40, 20);
+	final float[] vertices = {
+			// pos      // tex
+			0.0F, 1.0F, 0.0F, 1.0F,
+			1.0F, 0.0F, 1.0F, 0.0F,
+			0.0F, 0.0F, 0.0F, 0.0F,
+
+			0.0F, 1.0F, 0.0F, 1.0F,
+			1.0F, 1.0F, 1.0F, 1.0F,
+			1.0F, 0.0F, 1.0F, 0.0F,
+	};
 
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
 
-		LogicSimulator.instance = this;
 		// Initialize
 		initialize();
 
@@ -91,30 +76,12 @@ public final class LogicSimulator extends GLFWManager {
 		// Textures
 		Textures.init();
 
-		// Populate Grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y] = new ComponentContainer(x, y);
-			}
-		}
-
 		// Loop
 		loop();
 
 		// Exit
 		exit();
 	}
-
-	private final float[] vertices = {
-			// pos      // tex
-			0.0F, 1.0F, 0.0F, 1.0F,
-			1.0F, 0.0F, 1.0F, 0.0F,
-			0.0F, 0.0F, 0.0F, 0.0F,
-
-			0.0F, 1.0F, 0.0F, 1.0F,
-			1.0F, 1.0F, 1.0F, 1.0F,
-			1.0F, 0.0F, 1.0F, 0.0F,
-	};
 
 	private int tickClock;
 	private boolean paused;
@@ -125,57 +92,18 @@ public final class LogicSimulator extends GLFWManager {
 
 			if(!paused) {
 				if(++tickClock == 6) {
-					tick();
+					grid.tick();
 					tickClock = 0;
 				}
 			}
 
-			render();
+			grid.updateState();
+
+			grid.render();
 
 			swapBuffers();
 			pollEvents();
 		} while(!shouldClose());
-	}
-
-	private void tick() {
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].tick();
-			}
-		}
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].updateState();
-			}
-		}
-	}
-
-	private void render() {
-		// Prepare to draw entire grid
-		glBindBuffer(GL_ARRAY_BUFFER, squareVertex.vbo);
-		glBufferData(GL_ARRAY_BUFFER, new float[] {
-				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
-				1.0F, 0.0F, GRID_WIDTH, 0.0F,
-				0.0F, 0.0F, 0.0F, 0.0F,
-
-				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
-				1.0F, 1.0F, GRID_WIDTH, GRID_HEIGHT,
-				1.0F, 0.0F, GRID_WIDTH, 0.0F,
-		}, GL_STATIC_DRAW);
-		// Draw entire grid
-		prepareDrawTexture(Textures.CELL);
-		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
-
-		// Prepare to draw normal single cell textures
-		glBindBuffer(GL_ARRAY_BUFFER, squareVertex.vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-		// Render components on grid
-		for(int y = 0; y < GRID_HEIGHT; y++) {
-			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y].render();
-			}
-		}
 	}
 
 	void prepareDrawTexture(Texture texture) {
@@ -236,7 +164,7 @@ public final class LogicSimulator extends GLFWManager {
 //		if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
-		final ComponentContainer target = getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
+		final ComponentContainer target = grid.getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
 
 		if(GLFW.glfwGetMouseButton(window, 0) == 1) {
 			if(target != null) {
@@ -262,5 +190,11 @@ public final class LogicSimulator extends GLFWManager {
 			}
 		}
 //		}
+	}
+
+	// Static
+
+	public static void main(String[] args) {
+		new LogicSimulator().run();
 	}
 }

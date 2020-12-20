@@ -35,8 +35,8 @@ public class SwitchComponent implements Component, InteractableComponent {
 
 	@Override
 	public void render(ComponentContainer container) {
-		LogicSimulator.instance.prepareDrawTexture(active ? Textures.SWITCH_ON : Textures.SWITCH_OFF);
-		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+		container.simulator.prepareDrawTexture(active ? Textures.SWITCH_ON : Textures.SWITCH_OFF);
+		container.simulator.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override

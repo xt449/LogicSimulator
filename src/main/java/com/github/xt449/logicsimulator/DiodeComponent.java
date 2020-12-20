@@ -49,7 +49,7 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	public void updateState(ComponentContainer container) {
 		nextPoweredState = false;
 
-		final Component component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		final Component component = container.getRelativeComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isSendingPower(direction)) {
 				nextPoweredState = true;
@@ -59,36 +59,36 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 
 	@Override
 	public void render(ComponentContainer container) {
-		final Component forwardComponent = container.getRelativeGridComponent(direction);
+		final Component forwardComponent = container.getRelativeComponent(direction);
 		final int directionReversed = Direction.getDirectionReversed(direction);
-		final Component backwardComponent = container.getRelativeGridComponent(directionReversed);
+		final Component backwardComponent = container.getRelativeComponent(directionReversed);
 
 		if(powered) {
 			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredWire(direction));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+				container.simulator.prepareDrawTexture(Textures.getPoweredWire(direction));
+				container.simulator.drawTextureGridPosition(container.x, container.y);
 			}
 
 			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredWire(directionReversed));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+				container.simulator.prepareDrawTexture(Textures.getPoweredWire(directionReversed));
+				container.simulator.drawTextureGridPosition(container.x, container.y);
 			}
 
-			LogicSimulator.instance.prepareDrawTexture(Textures.getPoweredDiode(direction));
+			container.simulator.prepareDrawTexture(Textures.getPoweredDiode(direction));
 		} else {
 			if(forwardComponent != null && forwardComponent.hasIO(direction)) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getWire(direction));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+				container.simulator.prepareDrawTexture(Textures.getWire(direction));
+				container.simulator.drawTextureGridPosition(container.x, container.y);
 			}
 
 			if(backwardComponent != null && backwardComponent.hasIO(directionReversed)) {
-				LogicSimulator.instance.prepareDrawTexture(Textures.getWire(directionReversed));
-				LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+				container.simulator.prepareDrawTexture(Textures.getWire(directionReversed));
+				container.simulator.drawTextureGridPosition(container.x, container.y);
 			}
 
-			LogicSimulator.instance.prepareDrawTexture(Textures.getDiode(direction));
+			container.simulator.prepareDrawTexture(Textures.getDiode(direction));
 		}
-		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
+		container.simulator.drawTextureGridPosition(container.x, container.y);
 	}
 
 	@Override

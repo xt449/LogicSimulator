@@ -8,12 +8,16 @@ import java.util.Objects;
  */
 public class ComponentContainer {
 
+	final LogicSimulator simulator;
+
 	final int x;
 	final int y;
 
 	Component component = null;
 
-	public ComponentContainer(int x, int y) {
+	public ComponentContainer(LogicSimulator simulator, int x, int y) {
+		this.simulator = simulator;
+
 		this.x = x;
 		this.y = y;
 	}
@@ -65,33 +69,37 @@ public class ComponentContainer {
 			}
 		}
 
-		return LogicSimulator.instance.getComponentContainerAt(x, y);
+		return simulator.grid.getComponentContainerAt(x, y);
 	}
 
-	public Component getRelativeGridComponent(int direction) {
-		int x = this.x;
-		int y = this.y;
-
+	public ComponentContainer getRelativeGridComponent(int direction) {
 		switch(direction) {
-			case Direction.UP: {
-				y--;
-				break;
-			}
-			case Direction.DOWN: {
-				y++;
-				break;
-			}
-			case Direction.LEFT: {
-				x--;
-				break;
-			}
-			case Direction.RIGHT: {
-				x++;
-				break;
-			}
+			case Direction.UP:
+				return simulator.grid.getComponentContainerAt(x, y - 1);
+			case Direction.DOWN:
+				return simulator.grid.getComponentContainerAt(x, y + 1);
+			case Direction.LEFT:
+				return simulator.grid.getComponentContainerAt(x - 1, y);
+			case Direction.RIGHT:
+				return simulator.grid.getComponentContainerAt(x + 1, y);
 		}
 
-		return LogicSimulator.instance.getComponentAt(x, y);
+		return null;
+	}
+
+	public Component getRelativeComponent(int direction) {
+		switch(direction) {
+			case Direction.UP:
+				return simulator.grid.getComponentAt(x, y - 1);
+			case Direction.DOWN:
+				return simulator.grid.getComponentAt(x, y + 1);
+			case Direction.LEFT:
+				return simulator.grid.getComponentAt(x - 1, y);
+			case Direction.RIGHT:
+				return simulator.grid.getComponentAt(x + 1, y);
+		}
+
+		return null;
 	}
 
 	@Override
