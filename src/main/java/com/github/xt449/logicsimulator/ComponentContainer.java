@@ -6,14 +6,14 @@ import java.util.Objects;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public class GridComponentContainer {
+public class ComponentContainer {
 
 	final int x;
 	final int y;
 
-	GridComponent component = null;
+	Component component = null;
 
-	public GridComponentContainer(int x, int y) {
+	public ComponentContainer(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -42,7 +42,7 @@ public class GridComponentContainer {
 		}
 	}
 
-	public GridComponentContainer getRelativeGridSquare(int direction) {
+	public ComponentContainer getRelativeGridSquare(int direction) {
 		int x = this.x;
 		int y = this.y;
 
@@ -68,7 +68,7 @@ public class GridComponentContainer {
 		return LogicSimulator.instance.getComponentContainerAt(x, y);
 	}
 
-	public GridComponent getRelativeGridComponent(int direction) {
+	public Component getRelativeGridComponent(int direction) {
 		int x = this.x;
 		int y = this.y;
 
@@ -98,7 +98,7 @@ public class GridComponentContainer {
 	public boolean equals(Object other) {
 		if(this == other) return true;
 		if(other == null || getClass() != other.getClass()) return false;
-		GridComponentContainer square = (GridComponentContainer) other;
+		ComponentContainer square = (ComponentContainer) other;
 		return x == square.x && y == square.y;
 	}
 

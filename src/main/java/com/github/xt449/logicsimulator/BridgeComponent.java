@@ -28,14 +28,14 @@ public class BridgeComponent implements InstantComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
 		poweredFrom[2] = false;
 		poweredFrom[3] = false;
 
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponentContainer otherContainer = container.getRelativeGridSquare(direction);
+			final ComponentContainer otherContainer = container.getRelativeGridSquare(direction);
 			if(otherContainer != null) {
 				if(otherContainer.component != null) {
 					if(otherContainer.component.isSendingPower(Direction.getDirectionReversed(direction))) {
@@ -50,14 +50,14 @@ public class BridgeComponent implements InstantComponent {
 			}
 		}
 
-		final GridComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
-		final GridComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
-		final GridComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
-		final GridComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
+		final ComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
+		final ComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
+		final ComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
+		final ComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
 
 
 //		if(isSendingPower(Direction.UP)) {
-//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.UP);
+//			final ComponentContainer otherContainer = container.getRelativeGridSquare(Direction.UP);
 		if(containerUp != null) {
 			if(containerUp.component instanceof InstantComponent) {
 				if(containerUp.component.hasInputFrom(Direction.DOWN)) {
@@ -75,7 +75,7 @@ public class BridgeComponent implements InstantComponent {
 		}
 //		}
 //		if(isSendingPower(Direction.DOWN)) {
-//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.DOWN);
+//			final ComponentContainer otherContainer = container.getRelativeGridSquare(Direction.DOWN);
 		if(containerDown != null) {
 			if(containerDown.component instanceof InstantComponent) {
 				if(containerDown.component.hasInputFrom(Direction.UP)) {
@@ -93,7 +93,7 @@ public class BridgeComponent implements InstantComponent {
 		}
 //		}
 //		if(isSendingPower(Direction.LEFT)) {
-//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.LEFT);
+//			final ComponentContainer otherContainer = container.getRelativeGridSquare(Direction.LEFT);
 		if(containerLeft != null) {
 			if(containerLeft.component instanceof InstantComponent) {
 				if(containerLeft.component.hasInputFrom(Direction.RIGHT)) {
@@ -111,7 +111,7 @@ public class BridgeComponent implements InstantComponent {
 		}
 //		}
 //		if(isSendingPower(Direction.RIGHT)) {
-//			final GridComponentContainer otherContainer = container.getRelativeGridSquare(Direction.RIGHT);
+//			final ComponentContainer otherContainer = container.getRelativeGridSquare(Direction.RIGHT);
 		if(containerRight != null) {
 			if(containerRight.component instanceof InstantComponent) {
 				if(containerRight.component.hasInputFrom(Direction.LEFT)) {
@@ -131,7 +131,7 @@ public class BridgeComponent implements InstantComponent {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
+	public void render(ComponentContainer container) {
 		LogicSimulator.instance.prepareDrawTexture(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
 		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 

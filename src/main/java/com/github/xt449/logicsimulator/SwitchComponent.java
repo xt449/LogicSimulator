@@ -4,7 +4,7 @@ package com.github.xt449.logicsimulator;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public class SwitchComponent implements GridComponent, InteractableComponent {
+public class SwitchComponent implements Component, InteractableComponent {
 
 	private boolean active;
 
@@ -29,12 +29,12 @@ public class SwitchComponent implements GridComponent, InteractableComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		// nothing to update
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
+	public void render(ComponentContainer container) {
 		LogicSimulator.instance.prepareDrawTexture(active ? Textures.SWITCH_ON : Textures.SWITCH_OFF);
 		LogicSimulator.instance.drawTextureGridPosition(container.x, container.y);
 	}

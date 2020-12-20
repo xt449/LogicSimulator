@@ -31,7 +31,7 @@ public class WireComponent implements InstantComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		powered = false;
 		poweredFrom[0] = false;
 		poweredFrom[1] = false;
@@ -39,7 +39,7 @@ public class WireComponent implements InstantComponent {
 		poweredFrom[3] = false;
 
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponentContainer otherContainer = container.getRelativeGridSquare(direction);
+			final ComponentContainer otherContainer = container.getRelativeGridSquare(direction);
 			if(otherContainer != null) {
 				if(otherContainer.component != null) {
 					if(otherContainer.component.isSendingPower(Direction.getDirectionReversed(direction))) {
@@ -54,10 +54,10 @@ public class WireComponent implements InstantComponent {
 			}
 		}
 
-		final GridComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
-		final GridComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
-		final GridComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
-		final GridComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
+		final ComponentContainer containerUp = container.getRelativeGridSquare(Direction.UP);
+		final ComponentContainer containerDown = container.getRelativeGridSquare(Direction.DOWN);
+		final ComponentContainer containerLeft = container.getRelativeGridSquare(Direction.LEFT);
+		final ComponentContainer containerRight = container.getRelativeGridSquare(Direction.RIGHT);
 
 		if(powered) {
 			if(containerUp != null) {
@@ -155,9 +155,9 @@ public class WireComponent implements InstantComponent {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
+	public void render(ComponentContainer container) {
 		for(int direction = 0; direction < 4; direction++) {
-			final GridComponent component = container.getRelativeGridComponent(direction);
+			final Component component = container.getRelativeGridComponent(direction);
 			if(component != null) {
 				if(component.hasIO(Direction.getDirectionReversed(direction))) {
 					LogicSimulator.instance.prepareDrawTexture(powered ? Textures.getPoweredWire(direction) : Textures.getWire(direction));

@@ -32,10 +32,10 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	}
 
 	@Override
-	public void tick(GridComponentContainer container) {
+	public void tick(ComponentContainer container) {
 		powered = nextPoweredState;
 
-		final GridComponentContainer squareForward = container.getRelativeGridSquare(direction);
+		final ComponentContainer squareForward = container.getRelativeGridSquare(direction);
 		if(squareForward != null) {
 			if(squareForward.component instanceof InstantComponent) {
 				if(squareForward.component.hasInputFrom(Direction.getDirectionReversed(direction))) {
@@ -46,10 +46,10 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	}
 
 	@Override
-	public void updateState(GridComponentContainer container) {
+	public void updateState(ComponentContainer container) {
 		nextPoweredState = false;
 
-		final GridComponent component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
+		final Component component = container.getRelativeGridComponent(Direction.getDirectionReversed(direction));
 		if(component != null) {
 			if(component.isSendingPower(direction)) {
 				nextPoweredState = true;
@@ -58,10 +58,10 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 	}
 
 	@Override
-	public void render(GridComponentContainer container) {
-		final GridComponent forwardComponent = container.getRelativeGridComponent(direction);
+	public void render(ComponentContainer container) {
+		final Component forwardComponent = container.getRelativeGridComponent(direction);
 		final int directionReversed = Direction.getDirectionReversed(direction);
-		final GridComponent backwardComponent = container.getRelativeGridComponent(directionReversed);
+		final Component backwardComponent = container.getRelativeGridComponent(directionReversed);
 
 		if(powered) {
 			if(forwardComponent != null && forwardComponent.hasIO(direction)) {

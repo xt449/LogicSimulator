@@ -4,7 +4,7 @@ package com.github.xt449.logicsimulator;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-interface GridComponent {
+interface Component {
 
 	boolean isReceivingPower(int direction);
 
@@ -20,7 +20,7 @@ interface GridComponent {
 
 	//abstract void preTick(GridSquare gridSquare);
 
-	void tick(GridComponentContainer container);
+	void tick(ComponentContainer container);
 
-	void render(GridComponentContainer container);
+	void render(ComponentContainer container);
 }

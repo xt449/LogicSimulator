@@ -21,9 +21,9 @@ public final class LogicSimulator extends GLFWManager {
 
 	private final int GRID_WIDTH = 40;
 	private final int GRID_HEIGHT = 20;
-	private final GridComponentContainer[][] containerGrid = new GridComponentContainer[GRID_WIDTH][GRID_HEIGHT];
+	private final ComponentContainer[][] containerGrid = new ComponentContainer[GRID_WIDTH][GRID_HEIGHT];
 
-	GridComponentContainer getComponentContainerAt(int x, int y) {
+	ComponentContainer getComponentContainerAt(int x, int y) {
 		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
 			return null;
 		}
@@ -31,7 +31,7 @@ public final class LogicSimulator extends GLFWManager {
 		return containerGrid[x][y];
 	}
 
-	GridComponent getComponentAt(int x, int y) {
+	Component getComponentAt(int x, int y) {
 		if(x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
 			return null;
 		}
@@ -41,9 +41,8 @@ public final class LogicSimulator extends GLFWManager {
 
 	private Texture currentTexture;
 
-	int orthograhpicProgram;
-	int vbo;
-	int vao;
+	private int orthograhpicProgram;
+	private VertexObject squareVertex;
 
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
@@ -86,18 +85,8 @@ public final class LogicSimulator extends GLFWManager {
 		glDeleteShader(orthograhpicVertexShader);
 		glDeleteShader(orthograhpicFragmentShader);
 
-		// VBO
-		vbo = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-
-		// VAO
-		vao = glGenVertexArrays();
-		glBindVertexArray(vao);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		// Vertex Buffer Object and Vertex Array Object
+		squareVertex = new VertexObject(vertices, 4);
 
 		// Textures
 		Textures.init();
@@ -105,7 +94,7 @@ public final class LogicSimulator extends GLFWManager {
 		// Populate Grid
 		for(int y = 0; y < GRID_HEIGHT; y++) {
 			for(int x = 0; x < GRID_WIDTH; x++) {
-				containerGrid[x][y] = new GridComponentContainer(x, y);
+				containerGrid[x][y] = new ComponentContainer(x, y);
 			}
 		}
 
@@ -163,7 +152,7 @@ public final class LogicSimulator extends GLFWManager {
 
 	private void render() {
 		// Prepare to draw entire grid
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, squareVertex.vbo);
 		glBufferData(GL_ARRAY_BUFFER, new float[] {
 				0.0F, 1.0F, 0.0F, GRID_HEIGHT,
 				1.0F, 0.0F, GRID_WIDTH, 0.0F,
@@ -178,7 +167,7 @@ public final class LogicSimulator extends GLFWManager {
 		drawTextureExact(0, 0, GRID_WIDTH, GRID_HEIGHT);
 
 		// Prepare to draw normal single cell textures
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, squareVertex.vbo);
 		glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
 
 		// Render components on grid
@@ -203,7 +192,7 @@ public final class LogicSimulator extends GLFWManager {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
 
-		glBindVertexArray(vao);
+		glBindVertexArray(squareVertex.vao);
 	}
 
 	void drawTextureExact(float xPosition, float yPosition, float xScale, float yScale) {
@@ -247,7 +236,7 @@ public final class LogicSimulator extends GLFWManager {
 //		if(action == GLFW.GLFW_PRESS) {
 		updateCursorPosition();
 
-		final GridComponentContainer target = getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
+		final ComponentContainer target = getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
 
 		if(GLFW.glfwGetMouseButton(window, 0) == 1) {
 			if(target != null) {
