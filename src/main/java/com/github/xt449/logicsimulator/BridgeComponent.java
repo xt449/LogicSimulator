@@ -134,14 +134,6 @@ public class BridgeComponent implements InstantComponent {
 	public void render(ComponentContainer container) {
 		container.simulator.prepareDrawTexture(Textures.getBridge(isReceivingPower(Direction.LEFT), isReceivingPower(Direction.UP)));
 		container.simulator.drawTextureGridPosition(container.x, container.y);
-
-		// TODO : Debug
-		for(int direction = 0; direction < poweredFrom.length; direction++) {
-			if(poweredFrom[direction]) {
-				container.simulator.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
-				container.simulator.drawTextureGridPosition(container.x, container.y);
-			}
-		}
 	}
 
 	/*@Override

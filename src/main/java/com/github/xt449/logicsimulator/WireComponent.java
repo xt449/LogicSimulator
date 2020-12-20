@@ -1,9 +1,5 @@
 package com.github.xt449.logicsimulator;
 
-import org.lwjgl.opengl.GL33C;
-
-import static org.lwjgl.opengl.GL11C.GL_LINES;
-
 /**
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
@@ -172,17 +168,6 @@ public class WireComponent implements InstantComponent {
 
 		container.simulator.prepareDrawTexture(powered ? Textures.WIRE_CENTER_POWERED : Textures.WIRE_CENTER);
 		container.simulator.drawTextureGridPosition(container.x, container.y);
-
-		// TODO : Debug
-		for(int direction = 0; direction < poweredFrom.length; direction++) {
-			if(poweredFrom[direction]) {
-				container.simulator.prepareDrawTexture(Textures.getArrow(Direction.getDirectionReversed(direction)));
-				container.simulator.drawTextureGridPosition(container.x, container.y);
-			}
-		}
-
-		container.simulator.prepareDrawTexture(Textures.CELL);
-		GL33C.glDrawArrays(GL_LINES, 0, 3);
 	}
 
 	/*@Override

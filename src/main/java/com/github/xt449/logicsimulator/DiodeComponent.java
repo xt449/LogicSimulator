@@ -13,7 +13,7 @@ public class DiodeComponent implements DelayedComponent, DirectionalComponent {
 
 	@Override
 	public boolean isReceivingPower(int direction) {
-		return false; // todo
+		return powered; // TODO - simple stupid logic
 	}
 
 	@Override
