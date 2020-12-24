@@ -99,20 +99,6 @@ public abstract class Textures {
 			DIODE_RIGHT_POWERED,
 	};
 
-	// Arrows
-
-	static final Texture ARROW_UP = new Texture("arrow_up.png");
-	static final Texture ARROW_DOWN = new Texture("arrow_down.png");
-	static final Texture ARROW_LEFT = new Texture("arrow_left.png");
-	static final Texture ARROW_RIGHT = new Texture("arrow_right.png");
-
-	static final Texture[] ARROWS = {
-			ARROW_UP,
-			ARROW_DOWN,
-			ARROW_LEFT,
-			ARROW_RIGHT,
-	};
-
 	// Switches
 
 	static final Texture SWITCH_OFF = new Texture("switch_off.png");
@@ -124,6 +110,15 @@ public abstract class Textures {
 	static final Texture BRIDGE_HORIZONTAL = new Texture("bridge_horizontal.png");
 	static final Texture BRIDGE_VERTICAL = new Texture("bridge_vertical.png");
 	static final Texture BRIDGE_BOTH = new Texture("bridge_both.png");
+
+	// Box
+
+	static final Texture BOX_9SLICE = new Texture("box_9slice.png");
+
+	// Nodes
+
+	static final Texture NODE_INPUT = new Texture("node_input.png");
+	static final Texture NODE_OUTPUT = new Texture("node_output.png");
 
 	// Getters
 
@@ -212,21 +207,6 @@ public abstract class Textures {
 				return DIODE_LEFT_POWERED;
 			case Direction.RIGHT:
 				return DIODE_RIGHT_POWERED;
-			default:
-				return null;
-		}
-	}
-
-	static Texture getArrow(int direction) {
-		switch(direction) {
-			case Direction.UP:
-				return ARROW_UP;
-			case Direction.DOWN:
-				return ARROW_DOWN;
-			case Direction.LEFT:
-				return ARROW_LEFT;
-			case Direction.RIGHT:
-				return ARROW_RIGHT;
 			default:
 				return null;
 		}
