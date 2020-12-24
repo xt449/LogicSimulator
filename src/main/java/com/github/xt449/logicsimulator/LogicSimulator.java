@@ -19,8 +19,11 @@ public final class LogicSimulator extends GLFWManager {
 	private ShaderProgram simpleSquareProgram;
 	private VertexObject simpleSquareVertex;
 
-	private ShaderProgram slice4SquareProgram;
-	private VertexObject slice4SquareVertex;
+	private ShaderProgram scale9SliceProgram;
+	private VertexObject scale9SliceVertex;
+
+	private ShaderProgram lineProgram;
+	private VertexObject lineVertex;
 
 	public void run() {
 		System.out.println("LWJGL " + Version.getVersion());
@@ -30,15 +33,19 @@ public final class LogicSimulator extends GLFWManager {
 		initialize();
 
 		GL.createCapabilities();
+
+		// Enabled 2D Textures
 		glEnable(GL_TEXTURE_2D);
 
+		// Enabled Transparent Textures Blending
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Program and Shaders
-		simpleSquareProgram = new ShaderProgram(ResourceLoader.readAllLines("/simple.vsh"), ResourceLoader.readAllLines("/simple.fsh"));
+		// Enable Smooth Lines
+		glEnable(GL_LINE_SMOOTH);
 
-		// Vertex Buffer Object and Vertex Array Object
+		// ShaderProgram: Simple Square
+		simpleSquareProgram = new ShaderProgram(ResourceLoader.readAllLines("/simple.vsh"), ResourceLoader.readAllLines("/simple.fsh"));
 		simpleSquareVertex = new VertexObject(
 				new float[] {
 						// pos      // tex
@@ -53,55 +60,32 @@ public final class LogicSimulator extends GLFWManager {
 				4
 		);
 
-		// Program and Shaders
-		slice4SquareProgram = new ShaderProgram(ResourceLoader.readAllLines("/scale9slice.vsh"), ResourceLoader.readAllLines("/scale9slice.fsh"));
-
-		// Vertex Buffer Object and Vertex Array Object
-		slice4SquareVertex = simpleSquareVertex;
-		/*new VertexObject(
+		// ShaderProgram: Scale 9 Slice
+		scale9SliceProgram = new ShaderProgram(ResourceLoader.readAllLines("/scale9slice.vsh"), ResourceLoader.readAllLines("/scale9slice.fsh"));
+		scale9SliceVertex = new VertexObject(
 				new float[] {
-						// TL
 						// pos      // tex
-						0.0F, 1.0F, 0.0F, 0.5F,
-						1.0F, 0.0F, 0.5F, 0.0F,
+						0.0F, 1.0F, 0.0F, 1.0F,
+						1.0F, 0.0F, 1.0F, 0.0F,
 						0.0F, 0.0F, 0.0F, 0.0F,
 
-						0.0F, 1.0F, 0.0F, 0.5F,
-						1.0F, 1.0F, 0.5F, 0.5F,
-						1.0F, 0.0F, 0.5F, 0.0F,
-
-						// TR
-						// pos      // tex
-						0.0F, 1.0F, 0.5F, 0.5F,
-						1.0F, 0.0F, 1.0F, 0.0F,
-						0.0F, 0.0F, 0.5F, 0.0F,
-
-						0.0F, 1.0F, 0.5F, 0.5F,
-						1.0F, 1.0F, 1.0F, 0.5F,
-						1.0F, 0.0F, 1.0F, 0.0F,
-
-						// BL
-						// pos      // tex
 						0.0F, 1.0F, 0.0F, 1.0F,
-						1.0F, 0.0F, 0.5F, 0.5F,
-						0.0F, 0.0F, 0.0F, 0.5F,
-
-						0.0F, 1.0F, 0.0F, 1.0F,
-						1.0F, 1.0F, 0.5F, 1.0F,
-						1.0F, 0.0F, 0.5F, 0.5F,
-
-						// BR
-						// pos      // tex
-						0.0F, 1.0F, 0.5F, 1.0F,
-						1.0F, 0.0F, 1.0F, 0.5F,
-						0.0F, 0.0F, 0.5F, 0.5F,
-
-						0.0F, 1.0F, 0.5F, 1.0F,
 						1.0F, 1.0F, 1.0F, 1.0F,
-						1.0F, 0.0F, 1.0F, 0.5F,
+						1.0F, 0.0F, 1.0F, 0.0F,
 				},
 				4
-		);*/
+		);
+
+		// ShaderProgram: Line
+		lineProgram = new ShaderProgram(ResourceLoader.readAllLines("/line.vsh"), ResourceLoader.readAllLines("/line.fsh"));
+		lineVertex = new VertexObject(
+				new float[] {
+						// pos
+						0.0F, 0.0F,
+						0.0F, 0.0F,
+				},
+				2
+		);
 
 		// Textures
 		Textures.init();
@@ -140,42 +124,61 @@ public final class LogicSimulator extends GLFWManager {
 		} while(!shouldClose());
 	}
 
-	void prepare9SliceTexture(Texture texture, float red, float green, float blue) {
-		currentTexture = texture;
+	private final float[] orthoProjection = new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1).get(new float[16]);
 
-		glUseProgram(slice4SquareProgram.program);
+	void prepareLine(float red, float green, float blue) {
+		glUseProgram(lineProgram.program);
 
 		//
 
-		glUniform1i(glGetUniformLocation(slice4SquareProgram.program, "image"), 0);
-		glUniform3f(glGetUniformLocation(slice4SquareProgram.program, "color"), red, green, blue);
+		glUniform3f(glGetUniformLocation(lineProgram.program, "color"), red, green, blue);
+
+		//
+
+		glBindVertexArray(lineVertex.vao);
+	}
+
+	void drawLine(float xPosition, float yPosition, float xEnd, float yEnd) {
+		glUniformMatrix4fv(glGetUniformLocation(lineProgram.program, "model"), false,
+				new Matrix4f().translate(xPosition, yPosition, 0)
+						.get(new float[16])
+		);
+		glUniformMatrix4fv(glGetUniformLocation(lineProgram.program, "projection"), false, orthoProjection);
+
+		glBindBuffer(GL_ARRAY_BUFFER, lineVertex.vbo);
+		glBufferData(GL_ARRAY_BUFFER, new float[] {0, 0, xEnd - xPosition, yEnd - yPosition}, GL_STATIC_DRAW);
+
+		glLineWidth(4);
+		glDrawArrays(GL_LINES, 0, 2);
+	}
+
+	void prepare9SliceTexture(Texture texture, float red, float green, float blue) {
+		currentTexture = texture;
+
+		glUseProgram(scale9SliceProgram.program);
+
+		//
+
+		glUniform1i(glGetUniformLocation(scale9SliceProgram.program, "image"), 0);
+		glUniform3f(glGetUniformLocation(scale9SliceProgram.program, "color"), red, green, blue);
 
 		//
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, currentTexture.id);
 
-		glBindVertexArray(slice4SquareVertex.vao);
+		glBindVertexArray(scale9SliceVertex.vao);
 	}
 
 	void draw9SliceTexture(float xPosition, float yPosition, int width, int height) {
-		glUniformMatrix4fv(glGetUniformLocation(slice4SquareProgram.program, "model"), false,
+		glUniformMatrix4fv(glGetUniformLocation(scale9SliceProgram.program, "model"), false,
 				new Matrix4f().translate(xPosition, yPosition, 0)
 						.scale(width, height, 0)
 						.get(new float[16])
 		);
-		glUniformMatrix4fv(glGetUniformLocation(slice4SquareProgram.program, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
+		glUniformMatrix4fv(glGetUniformLocation(scale9SliceProgram.program, "projection"), false, orthoProjection);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-//		glDrawArrays(GL_TRIANGLES, 6, 6);
-//
-//		glDrawArrays(GL_TRIANGLES, 12, 6);
-//
-//		glDrawArrays(GL_TRIANGLES, 18, 6);
 	}
 
 	void prepareSimpleTexture(Texture texture, float red, float green, float blue, boolean mirrored, boolean flipped, boolean inverted) {
@@ -219,10 +222,7 @@ public final class LogicSimulator extends GLFWManager {
 						.scale(currentTexture.width, currentTexture.height, 0)
 						.get(new float[16])
 		);
-		glUniformMatrix4fv(glGetUniformLocation(simpleSquareProgram.program, "projection"), false,
-				new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1)
-						.get(new float[16])
-		);
+		glUniformMatrix4fv(glGetUniformLocation(simpleSquareProgram.program, "projection"), false, orthoProjection);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

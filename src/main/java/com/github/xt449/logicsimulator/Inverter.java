@@ -10,8 +10,8 @@ public class Inverter extends SizeableNodeContainer {
 
 	final Vector2i position;
 
-	final Node input = new SimpleInputNode(this, new Vector2i(8 - 4, 8 - 4));
-	final Node output = new SimpleOutputNode(this, new Vector2i(64 - 4, 8 - 4));
+	final Node input = new SimpleInputNode(this, new Vector2i(12, 12));
+	final Node output = new SimpleOutputNode(this, new Vector2i(68, 12));
 
 	public Inverter(Vector2i position) {
 		super(80, 24);

@@ -41,12 +41,20 @@ public abstract class SizeableNodeContainer implements NodeContainer {
 				simulator.prepareSimpleTexture(Textures.NODE_INPUT, 1, 1, 1, false, false, false);
 			}
 
-			simulator.drawSimpleTextureExactPosition(position.x, position.y);
+			// subtract 8 for half the size of the node texture
+			simulator.drawSimpleTextureExactPosition(position.x - 8, position.y - 8);
+
+			simulator.prepareLine(1, 0, 0);
+			simulator.drawLine(position.x, position.y, 128, 128);
 		}
 
 		postRender();
 	}
 
 	protected void postRender() {
+		final LogicSimulator simulator = LogicSimulator.get();
+
+		final Vector2i position = getPosition();
+
 	}
 }

@@ -30,11 +30,14 @@ public interface NodeContainer {
 		boolean isOutput();
 
 		/**
+		 * Should return the position at the center of the node
+		 *
 		 * @return position relative to parent
 		 */
 		Vector2i getLocalPosition();
 
 		/**
+		 * Should return the position at the center of the node
 		 * @return absolute position
 		 */
 		Vector2i getGlobalPosition();
