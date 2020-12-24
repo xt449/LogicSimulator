@@ -52,9 +52,5 @@ public abstract class SizeableNodeContainer implements NodeContainer {
 	}
 
 	protected void postRender() {
-		final LogicSimulator simulator = LogicSimulator.get();
-
-		final Vector2i position = getPosition();
-
 	}
 }
