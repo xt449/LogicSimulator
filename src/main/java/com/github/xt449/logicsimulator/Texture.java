@@ -22,9 +22,9 @@ public class Texture {
 	public Texture(String fileName) {
 		final IntBuffer widthPointer = BufferUtils.createIntBuffer(1);
 		final IntBuffer heightPointer = BufferUtils.createIntBuffer(1);
-		final IntBuffer channels = BufferUtils.createIntBuffer(1);
+		final IntBuffer channelsPointer = BufferUtils.createIntBuffer(1);
 
-		final ByteBuffer byteBuffer = STBImage.stbi_load(LogicSimulator.class.getResource("/textures/" + fileName).getPath().substring(1), widthPointer, heightPointer, channels, STBImage.STBI_rgb_alpha).asReadOnlyBuffer();
+		final ByteBuffer byteBuffer = STBImage.stbi_load(LogicSimulator.class.getResource("/textures/" + fileName).getPath().substring(1), widthPointer, heightPointer, channelsPointer, STBImage.STBI_rgb_alpha).asReadOnlyBuffer();
 
 		width = widthPointer.get(0);
 		height = heightPointer.get(0);

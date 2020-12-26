@@ -29,8 +29,8 @@ public class Inverter extends SizeableNodeContainer {
 		return new Vector2i(position);
 	}
 
-	/*@Override
-	protected void postRender() {
-
-	}*/
+	@Override
+	protected void postRender(LogicSimulator simulator) {
+		// TODO - Render text
+	}
 }

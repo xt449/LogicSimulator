@@ -29,7 +29,6 @@ public final class LogicSimulator extends GLFWManager {
 		System.out.println("LWJGL " + Version.getVersion());
 
 		// Initialize
-		LogicSimulator.instance = this;
 		initialize();
 
 		GL.createCapabilities();
@@ -90,6 +89,9 @@ public final class LogicSimulator extends GLFWManager {
 		// Textures
 		Textures.init();
 
+		// Fonts
+		Fonts.init();
+
 		// Loop
 		loop();
 
@@ -117,7 +119,7 @@ public final class LogicSimulator extends GLFWManager {
 			//grid.updateState();
 
 			//grid.render();
-			testContainer.render();
+			testContainer.render(this);
 
 			swapBuffers();
 			pollEvents();
@@ -258,12 +260,6 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	// Static
-
-	private static LogicSimulator instance;
-
-	public static LogicSimulator get() {
-		return instance;
-	}
 
 	public static void main(String[] args) {
 		new LogicSimulator().run();
