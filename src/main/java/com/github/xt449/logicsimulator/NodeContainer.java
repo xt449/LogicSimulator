@@ -25,13 +25,6 @@ public abstract class NodeContainer {
 	 */
 	protected abstract Node[] getNodes();
 
-	/**
-	 * @return absolute position
-	 */
-	protected Vector2i getPosition() {
-		return new Vector2i(position);
-	}
-
 	protected abstract void tick();
 
 	protected void postTick() {
@@ -39,8 +32,6 @@ public abstract class NodeContainer {
 
 	public final void render(LogicSimulator simulator) {
 		// Render Container
-
-		final Vector2i position = getPosition();
 
 		simulator.prepare9SliceTexture(Textures.BOX_9SLICE, 1, 1, 1);
 		simulator.draw9SliceTexture(position.x, position.y, width, height);
@@ -57,5 +48,9 @@ public abstract class NodeContainer {
 	}
 
 	protected void postRender(LogicSimulator simulator) {
+	}
+
+	protected boolean containsPoint(Vector2i point) {
+		return (position.x <= point.x && position.y <= point.y) && (position.x + width >= point.x && position.y + height >= point.y);
 	}
 }

@@ -3,8 +3,9 @@ package com.github.xt449.logicsimulator;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -31,7 +32,7 @@ public final class LogicSimulator extends GLFWManager {
 		// Initialize
 		initialize();
 
-		GL.createCapabilities();
+		org.lwjgl.opengl.GL.createCapabilities();
 
 		// Enabled 2D Textures
 		glEnable(GL_TEXTURE_2D);
@@ -90,7 +91,7 @@ public final class LogicSimulator extends GLFWManager {
 		Textures.init();
 
 		// Fonts
-		Fonts.init();
+		// TODO - Fonts.init();
 
 		// Loop
 		loop();
@@ -102,24 +103,31 @@ public final class LogicSimulator extends GLFWManager {
 	private int tickClock;
 	private boolean paused;
 
+	private final List<NodeContainer> containers = new ArrayList<>();
+
 	private void loop() {
-		final NodeContainer testContainer = new Inverter(new Vector2i(20, 20));
+		containers.add(new Inverter(new Vector2i(20, 20)));
 
 		do {
 			glClearColor(1, 1, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
+			updateCursorPosition();
+
+			if(containerCursor != null) {
+				containerCursor.position.set(new Vector2i((int) cursorX, (int) cursorY).sub(containerCursorOffset));
+			}
+
 			if(!paused) {
 				if(++tickClock == 6) {
-					//grid.tick();
+					containers.stream().forEach(NodeContainer::tick);
 					tickClock = 0;
 				}
 			}
 
-			//grid.updateState();
+			//containers.stream().forEach(nodeContainer -> nodeContainer.updateState(this));
 
-			//grid.render();
-			testContainer.render(this);
+			containers.stream().forEach(nodeContainer -> nodeContainer.render(this));
 
 			swapBuffers();
 			pollEvents();
@@ -237,24 +245,34 @@ public final class LogicSimulator extends GLFWManager {
 		drawSimpleTextureExactPosition(xGridRatio * windowWidth, yGridOffset * windowHeight);
 	}
 
+	private NodeContainer containerCursor;
+	private Vector2i containerCursorOffset;
+
 	@Override
 	void keyCallback(long window, int key, int scancode, int action, int mods) {
-		if(key == GLFW.GLFW_KEY_P && action == 1) {
+		/*if(key == GLFW_KEY_P && action == 1) {
 			paused = !paused;
-		}
+		}*/
 	}
 
 	@Override
 	void mouseButtonCallback(long window, int button, int action, int mods) {
 //		if(action == GLFW.GLFW_PRESS) {
-		updateCursorPosition();
+		//updateCursorPosition();
+		final Vector2i cursorPosition = new Vector2i((int) cursorX, (int) cursorY);
 
-		//final ComponentContainer target = grid.getComponentContainerAt((int) cursorX / 32, (int) cursorY / 32);
-
-		if(GLFW.glfwGetMouseButton(window, 0) == 1) {
-			//
-		} else if(GLFW.glfwGetMouseButton(window, 1) == 1) {
-			//
+		if(button == 0) {
+			if(action == 1) {
+				for(NodeContainer container : containers) {
+					if(container.containsPoint(cursorPosition)) {
+						containerCursor = container;
+						containerCursorOffset = cursorPosition.sub(container.position);
+						break;
+					}
+				}
+			} else {
+				containerCursor = null;
+			}
 		}
 //		}
 	}

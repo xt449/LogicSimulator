@@ -28,7 +28,7 @@ public abstract class AbstractSimpleNode implements Node {
 
 	@Override
 	public Vector2i getGlobalPosition() {
-		return parent.getPosition().add(localPosition);
+		return new Vector2i(parent.position).add(localPosition);
 	}
 
 	@Override
