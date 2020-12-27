@@ -10,7 +10,7 @@ public class Fonts {
 		System.out.println("First font pointer is " + nk57.info.address());
 	}
 
-	static final Font nk57 = new Font("/nk57-monospace.regular.ttf/");
+	static final Font nk57 = new Font("nk57-monospace.regular.ttf");
 
-	static final Font noto = new Font("/noto-mono.regular.ttf/");
+	static final Font noto = new Font("noto-mono.regular.ttf");
 }

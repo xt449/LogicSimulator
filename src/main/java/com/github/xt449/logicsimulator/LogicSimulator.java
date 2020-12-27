@@ -91,7 +91,7 @@ public final class LogicSimulator extends GLFWManager {
 		Textures.init();
 
 		// Fonts
-		// TODO - Fonts.init();
+		// TODO - Font initialization is not working - Fonts.init();
 
 		// Loop
 		loop();

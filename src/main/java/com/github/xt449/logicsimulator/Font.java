@@ -25,7 +25,7 @@ public class Font {
 		final IntBuffer descentPointer = BufferUtils.createIntBuffer(1);
 		final IntBuffer lineGapPointer = BufferUtils.createIntBuffer(1);
 
-		STBTruetype.stbtt_InitFont(info, ResourceLoader.readBytes(fileNamne));
+		STBTruetype.stbtt_InitFont(info, ResourceLoader.readBytes("/fonts/" + fileNamne));
 		STBTruetype.stbtt_GetFontVMetrics(info, ascentPointer, descentPointer, lineGapPointer);
 
 		ascent = ascentPointer.get(0);
