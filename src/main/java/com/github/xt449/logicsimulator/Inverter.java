@@ -6,17 +6,13 @@ import org.joml.Vector2i;
  * @author Jonathan Taclott (xt449 / BinaryBanana)
  * All Rights Reserved
  */
-public class Inverter extends SizeableNodeContainer {
-
-	final Vector2i position;
+public class Inverter extends NodeContainer {
 
 	final Node input = new SimpleInputNode(this, new Vector2i(12, 12));
 	final Node output = new SimpleOutputNode(this, new Vector2i(68, 12));
 
 	public Inverter(Vector2i position) {
-		super(80, 24);
-
-		this.position = position;
+		super(position, 80, 24);
 	}
 
 	@Override
@@ -25,8 +21,13 @@ public class Inverter extends SizeableNodeContainer {
 	}
 
 	@Override
-	public Vector2i getPosition() {
-		return new Vector2i(position);
+	protected void tick() {
+
+	}
+
+	@Override
+	protected void postTick() {
+		// TODO
 	}
 
 	@Override
