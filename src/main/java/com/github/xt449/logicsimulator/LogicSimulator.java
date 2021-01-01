@@ -91,7 +91,8 @@ public final class LogicSimulator extends GLFWManager {
 		Textures.init();
 
 		// Fonts
-		// TODO - Font initialization is not working - Fonts.init();
+		// TODO - Font initialization is not working:
+		Fonts.init();
 
 		// Loop
 		loop();
@@ -135,6 +136,18 @@ public final class LogicSimulator extends GLFWManager {
 	}
 
 	private final float[] orthoProjection = new Matrix4f().ortho(0, windowWidth, windowHeight, 0, -1, 1).get(new float[16]);
+
+	void prepareText() {
+		// TODO - use font shader program
+
+		//
+
+		// TODO - bind vertex array?
+	}
+
+	void drawText(String text, float red, float green, float blue) {
+
+	}
 
 	void prepareLine(float red, float green, float blue) {
 		glUseProgram(lineProgram.program);

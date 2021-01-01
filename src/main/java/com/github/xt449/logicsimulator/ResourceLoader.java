@@ -19,17 +19,16 @@ abstract class ResourceLoader {
 
 	static ByteBuffer readBytes(String resourceLocation) {
 		try(final InputStream byteStream = LogicSimulator.class.getResourceAsStream(resourceLocation)) {
-			//final int available = byteStream.available();
-			//final ByteBuffer buffer = BufferUtils.createByteBuffer(available);
+			final ByteBuffer buffer = ByteBuffer.allocateDirect(byteStream.available());
 			final byte[] data = new byte[byteStream.available()];
-			final ByteBuffer buffer = ByteBuffer.wrap(data);
 			byteStream.read(data);
 			buffer.put(data);
+			buffer.flip();
 			return buffer;
 		} catch(IOException exc) {
 			exc.printStackTrace();
 		}
 
-		return ByteBuffer.allocate(0);
+		return ByteBuffer.allocateDirect(0);
 	}
 }
